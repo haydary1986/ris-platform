@@ -279,6 +279,46 @@
     },
     "no_profile": "Your account isn't linked to a researcher record yet. Visit the claim page or contact an admin."
   },
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Research output across the University.",
+    "filters": {
+      "year_from": "From year",
+      "year_to": "To year",
+      "college": "College",
+      "all": "All",
+      "apply": "Apply"
+    },
+    "kpis": {
+      "researchers": "Researchers",
+      "publications": "Publications",
+      "citations": "Citations",
+      "avg_h_index": "Avg h-index"
+    },
+    "charts": {
+      "by_year": "Publications by year",
+      "by_source": "By source",
+      "by_type": "By type",
+      "by_college_treemap": "By college (treemap)",
+      "by_title": "Researchers by academic title",
+      "by_gender": "Researchers by gender",
+      "h_index_distribution": "h-index distribution",
+      "scopus_vs_wos": "Scopus vs WoS h-index",
+      "sdg_alignment": "SDG alignment",
+      "radar": "Research output radar"
+    },
+    "drill": {
+      "title": "Researchers in {label}",
+      "view_all": "View all in directory"
+    },
+    "export": {
+      "png": "Export PNG",
+      "excel": "Export Excel",
+      "pdf": "Print as PDF",
+      "downloading": "Downloading…"
+    },
+    "empty": "No data yet — analytics will populate once publications are imported."
+  },
   "import": {
     "title": "Import publications",
     "subtitle": "Three providers, one merger. Conflicts resolve by DOI first, then fuzzy title.",

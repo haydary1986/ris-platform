@@ -279,6 +279,46 @@
     },
     "no_profile": "حسابك غير مرتبط بسجل باحث بعد. تفضّل بصفحة المطالبة أو راجع المسؤول."
   },
+  "analytics": {
+    "title": "التحليلات",
+    "subtitle": "مخرجات البحث العلمي عبر الجامعة.",
+    "filters": {
+      "year_from": "من سنة",
+      "year_to": "إلى سنة",
+      "college": "الكلية",
+      "all": "الكل",
+      "apply": "تطبيق"
+    },
+    "kpis": {
+      "researchers": "الباحثون",
+      "publications": "المنشورات",
+      "citations": "الاقتباسات",
+      "avg_h_index": "متوسط h-index"
+    },
+    "charts": {
+      "by_year": "المنشورات حسب السنة",
+      "by_source": "حسب المصدر",
+      "by_type": "حسب النوع",
+      "by_college_treemap": "حسب الكلية (treemap)",
+      "by_title": "الباحثون حسب اللقب",
+      "by_gender": "الباحثون حسب النوع",
+      "h_index_distribution": "توزيع h-index",
+      "scopus_vs_wos": "Scopus مقابل WoS h-index",
+      "sdg_alignment": "التوافق مع SDG",
+      "radar": "رادار المخرجات"
+    },
+    "drill": {
+      "title": "الباحثون في {label}",
+      "view_all": "عرض الكل في الدليل"
+    },
+    "export": {
+      "png": "تصدير PNG",
+      "excel": "تصدير Excel",
+      "pdf": "طباعة كـ PDF",
+      "downloading": "جارٍ التنزيل…"
+    },
+    "empty": "لا بيانات بعد — ستظهر التحليلات بعد استيراد المنشورات."
+  },
   "import": {
     "title": "استيراد المنشورات",
     "subtitle": "ثلاث مصادر، دمج موحَّد. تُحلّ التعارضات بـ DOI أولاً ثم بمطابقة العنوان.",
