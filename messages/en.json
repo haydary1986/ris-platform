@@ -171,6 +171,114 @@
     },
     "contact_hidden": "Contact details are private. Sign in to request via the platform."
   },
+  "manage": {
+    "title": "Manage profile",
+    "edit_lang": "Editing language",
+    "save": "Save changes",
+    "saved": "Saved",
+    "saving": "Saving…",
+    "discard": "Discard",
+    "unsaved_warning": "You have unsaved changes. Leave this page?",
+    "errors_title": "Validation errors",
+    "errors_body": "Please fix the highlighted fields before saving.",
+    "go_to": "Go to {section}",
+    "tabs": {
+      "basic": "Basic",
+      "academic": "Academic",
+      "research": "Research",
+      "contact": "Contact",
+      "experience": "Experience",
+      "publications": "Publications"
+    },
+    "basic": {
+      "full_name_en": "Full name (English)",
+      "full_name_ar": "Full name (Arabic)",
+      "employee_id": "Employee ID",
+      "gender": "Gender",
+      "birthdate": "Date of birth",
+      "academic_title": "Academic title",
+      "profile_image": "Profile image",
+      "upload_image": "Upload image",
+      "remove_image": "Remove",
+      "image_hint": "PNG / JPEG / WEBP, max 2 MB."
+    },
+    "academic": {
+      "workplace_type": "Workplace type",
+      "college": "College",
+      "department": "Department",
+      "university_center": "University center",
+      "degree_en": "Degree (English)",
+      "degree_ar": "Degree (Arabic)",
+      "degree_minor_en": "Minor (English)",
+      "degree_minor_ar": "Minor (Arabic)"
+    },
+    "research": {
+      "bio_en": "Biography (English)",
+      "bio_ar": "Biography (Arabic)",
+      "interests_en": "Research interests (English)",
+      "interests_ar": "Research interests (Arabic)",
+      "website": "Personal website",
+      "skills": "Skills (comma-separated)",
+      "skills_hint": "E.g.: Machine Learning, NLP, Bioinformatics",
+      "languages": "Languages",
+      "languages_hint": "Format: code:level — e.g. en:C1, ar:native, fr:B2",
+      "socials": "Social profiles",
+      "socials_hint": "One per line, format: platform|url — e.g. orcid|https://orcid.org/0000-…"
+    },
+    "contact": {
+      "show_public": "Make public contact info visible on the profile page",
+      "private_section": "Private (admin-only)",
+      "public_section": "Public (visible if toggle on)",
+      "email": "Email",
+      "phone": "Phone",
+      "office_location": "Office location",
+      "office_hours": "Office hours",
+      "mailing_address": "Mailing address"
+    },
+    "experience": {
+      "section_work": "Work experience",
+      "section_certs": "Certifications",
+      "section_awards": "Awards",
+      "section_projects": "Projects",
+      "add_row": "Add",
+      "edit": "Edit",
+      "delete": "Delete",
+      "current": "Current"
+    },
+    "publications": {
+      "list_title": "Your publications",
+      "add_manual": "Add publication",
+      "import_scholar": "Import from Google Scholar",
+      "import_orcid": "Import from ORCID",
+      "import_phase10": "(coming in import phase)",
+      "form": {
+        "title": "Title",
+        "abstract": "Abstract",
+        "type": "Type",
+        "source": "Source",
+        "journal_name": "Journal name",
+        "conference_name": "Conference name",
+        "publisher": "Publisher",
+        "year": "Year",
+        "doi": "DOI",
+        "authors": "Authors (one per line)",
+        "is_open_access": "Open access"
+      }
+    },
+    "visibility": {
+      "title": "Profile visibility",
+      "is_public": "Show in public researcher directory",
+      "override_force_show": "Admin override: this profile is force-shown.",
+      "override_force_hide": "Admin override: this profile is force-hidden."
+    },
+    "validation": {
+      "required": "Required",
+      "url": "Must be a valid URL",
+      "max": "Too long ({n} max)",
+      "year_range": "Year must be between 1900 and 2100"
+    },
+    "no_profile": "Your account isn't linked to a researcher record yet. Visit the claim page or contact an admin."
+  },
   "directory": {
     "title": "Researchers",
     "subtitle": "{count, plural, =0 {No researchers yet} one {# researcher} other {# researchers}}",

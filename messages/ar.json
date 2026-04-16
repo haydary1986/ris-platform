@@ -171,6 +171,114 @@
     },
     "contact_hidden": "بيانات التواصل خاصة. سجّل الدخول للتواصل عبر المنصة."
   },
+  "manage": {
+    "title": "إدارة الملف",
+    "edit_lang": "لغة التحرير",
+    "save": "حفظ التغييرات",
+    "saved": "تم الحفظ",
+    "saving": "جارٍ الحفظ…",
+    "discard": "تجاهل",
+    "unsaved_warning": "لديك تغييرات غير محفوظة. هل تريد المغادرة؟",
+    "errors_title": "أخطاء التحقق",
+    "errors_body": "صحّح الحقول المظلَّلة قبل الحفظ.",
+    "go_to": "الانتقال إلى {section}",
+    "tabs": {
+      "basic": "الأساسي",
+      "academic": "الأكاديمي",
+      "research": "البحث",
+      "contact": "التواصل",
+      "experience": "الخبرات",
+      "publications": "المنشورات"
+    },
+    "basic": {
+      "full_name_en": "الاسم الكامل (إنكليزي)",
+      "full_name_ar": "الاسم الكامل (عربي)",
+      "employee_id": "الرقم الوظيفي",
+      "gender": "النوع",
+      "birthdate": "تاريخ الميلاد",
+      "academic_title": "اللقب العلمي",
+      "profile_image": "صورة الملف",
+      "upload_image": "تحميل صورة",
+      "remove_image": "إزالة",
+      "image_hint": "PNG / JPEG / WEBP، حد أقصى 2 MB."
+    },
+    "academic": {
+      "workplace_type": "نوع مكان العمل",
+      "college": "الكلية",
+      "department": "القسم",
+      "university_center": "المركز الجامعي",
+      "degree_en": "الدرجة (إنكليزي)",
+      "degree_ar": "الدرجة (عربي)",
+      "degree_minor_en": "التخصص الفرعي (إنكليزي)",
+      "degree_minor_ar": "التخصص الفرعي (عربي)"
+    },
+    "research": {
+      "bio_en": "السيرة (إنكليزي)",
+      "bio_ar": "السيرة (عربي)",
+      "interests_en": "اهتمامات البحث (إنكليزي)",
+      "interests_ar": "اهتمامات البحث (عربي)",
+      "website": "الموقع الشخصي",
+      "skills": "المهارات (مفصولة بفواصل)",
+      "skills_hint": "مثال: تعلّم الآلة، معالجة اللغة الطبيعية، المعلوماتية الحيوية",
+      "languages": "اللغات",
+      "languages_hint": "الصيغة: رمز:مستوى — مثل en:C1, ar:native, fr:B2",
+      "socials": "الحسابات الإلكترونية",
+      "socials_hint": "حساب لكل سطر، الصيغة: المنصة|الرابط — مثل orcid|https://orcid.org/0000-…"
+    },
+    "contact": {
+      "show_public": "إظهار معلومات التواصل العامة في صفحة الملف",
+      "private_section": "خاص (للمدير فقط)",
+      "public_section": "عام (يُعرض إذا تم التفعيل)",
+      "email": "البريد",
+      "phone": "الهاتف",
+      "office_location": "موقع المكتب",
+      "office_hours": "ساعات الدوام",
+      "mailing_address": "العنوان البريدي"
+    },
+    "experience": {
+      "section_work": "الخبرات الوظيفية",
+      "section_certs": "الشهادات",
+      "section_awards": "الجوائز",
+      "section_projects": "المشاريع",
+      "add_row": "إضافة",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "current": "حالياً"
+    },
+    "publications": {
+      "list_title": "منشوراتك",
+      "add_manual": "إضافة منشور",
+      "import_scholar": "استيراد من Google Scholar",
+      "import_orcid": "استيراد من ORCID",
+      "import_phase10": "(قادم في مرحلة الاستيراد)",
+      "form": {
+        "title": "العنوان",
+        "abstract": "الملخّص",
+        "type": "النوع",
+        "source": "المصدر",
+        "journal_name": "اسم المجلة",
+        "conference_name": "اسم المؤتمر",
+        "publisher": "الناشر",
+        "year": "السنة",
+        "doi": "DOI",
+        "authors": "المؤلفون (مؤلف لكل سطر)",
+        "is_open_access": "وصول مفتوح"
+      }
+    },
+    "visibility": {
+      "title": "ظهور الملف",
+      "is_public": "إظهار في دليل الباحثين العام",
+      "override_force_show": "تجاوز إداري: الملف معروض إجبارياً.",
+      "override_force_hide": "تجاوز إداري: الملف مخفي إجبارياً."
+    },
+    "validation": {
+      "required": "مطلوب",
+      "url": "رابط غير صالح",
+      "max": "طويل جداً (الحد الأقصى {n})",
+      "year_range": "السنة يجب أن تكون بين 1900 و 2100"
+    },
+    "no_profile": "حسابك غير مرتبط بسجل باحث بعد. تفضّل بصفحة المطالبة أو راجع المسؤول."
+  },
   "directory": {
     "title": "الباحثون",
     "subtitle": "{count, plural, =0 {لا يوجد باحثون بعد} one {باحث واحد} two {باحثان} few {# باحثين} many {# باحثاً} other {# باحث}}",
