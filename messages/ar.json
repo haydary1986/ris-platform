@@ -1,0 +1,49 @@
+{
+  "common": {
+    "app_name": "نظام الباحثين",
+    "app_full_name": "نظام معلومات الباحثين",
+    "university": "جامعة الموصل",
+    "loading": "جارٍ التحميل…",
+    "error": "حدث خطأ ما.",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "close": "إغلاق",
+    "search": "بحث",
+    "language": "اللغة",
+    "theme_toggle": "تبديل المظهر"
+  },
+  "navigation": {
+    "home": "الرئيسية",
+    "researchers": "الباحثون",
+    "analytics": "التحليلات",
+    "about": "عن المنصة",
+    "sign_in": "تسجيل الدخول",
+    "sign_out": "تسجيل الخروج",
+    "manage_profile": "إدارة الملف",
+    "admin": "لوحة الإدارة"
+  },
+  "landing": {
+    "hero": {
+      "title": "نظام معلومات الباحثين — جامعة الموصل",
+      "tagline": "استكشف أبحاث وإصدارات وتعاونات منتسبي الجامعة.",
+      "cta_primary": "تصفح الباحثين",
+      "cta_secondary": "اعرف المزيد"
+    },
+    "stats": {
+      "researchers": "الباحثون",
+      "colleges": "الكليات",
+      "departments": "الأقسام",
+      "publications": "المنشورات"
+    }
+  },
+  "footer": {
+    "about": "عن المنصة",
+    "contact": "تواصل",
+    "privacy": "سياسة الخصوصية",
+    "terms": "شروط الاستخدام",
+    "address": "جامعة الموصل، الموصل، العراق",
+    "copyright": "© {year} جامعة الموصل. جميع الحقوق محفوظة."
+  }
+}

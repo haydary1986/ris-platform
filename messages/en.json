@@ -1,0 +1,49 @@
+{
+  "common": {
+    "app_name": "RIS",
+    "app_full_name": "Researcher Information System",
+    "university": "University of Mosul",
+    "loading": "Loading…",
+    "error": "Something went wrong.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "search": "Search",
+    "language": "Language",
+    "theme_toggle": "Toggle theme"
+  },
+  "navigation": {
+    "home": "Home",
+    "researchers": "Researchers",
+    "analytics": "Analytics",
+    "about": "About",
+    "sign_in": "Sign in",
+    "sign_out": "Sign out",
+    "manage_profile": "Manage profile",
+    "admin": "Admin"
+  },
+  "landing": {
+    "hero": {
+      "title": "RIS — University of Mosul Researcher Directory",
+      "tagline": "Discover the research, publications, and collaborations of our scholars.",
+      "cta_primary": "Explore researchers",
+      "cta_secondary": "Learn more"
+    },
+    "stats": {
+      "researchers": "Researchers",
+      "colleges": "Colleges",
+      "departments": "Departments",
+      "publications": "Publications"
+    }
+  },
+  "footer": {
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "address": "University of Mosul, Mosul, Iraq",
+    "copyright": "© {year} University of Mosul. All rights reserved."
+  }
+}
