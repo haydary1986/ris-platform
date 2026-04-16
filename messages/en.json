@@ -279,6 +279,58 @@
     },
     "no_profile": "Your account isn't linked to a researcher record yet. Visit the claim page or contact an admin."
   },
+  "import": {
+    "title": "Import publications",
+    "subtitle": "Three providers, one merger. Conflicts resolve by DOI first, then fuzzy title.",
+    "scholar": {
+      "title": "Google Scholar",
+      "intro": "Google Scholar has no public API. Pick one of the two flows below.",
+      "extension": {
+        "title": "Browser extension (recommended)",
+        "step_1": "Download and unzip the RIS Scholar Importer extension.",
+        "step_2": "Visit chrome://extensions, enable Developer mode, click \"Load unpacked\", and select the unzipped folder.",
+        "step_3": "Open your Google Scholar profile, then click the RIS extension icon in the toolbar.",
+        "step_4": "Save the .mrhenc file the extension downloads, then upload it here.",
+        "download_zip": "Download extension (.zip)"
+      },
+      "console": {
+        "title": "Console script (fallback)",
+        "intro": "Use this if you can't install the extension.",
+        "step_1": "Open your Google Scholar profile page.",
+        "step_2": "Open the browser DevTools console (F12 → Console).",
+        "step_3": "Paste the snippet below and press Enter. A .mrhenc file will download.",
+        "step_4": "Upload the file here.",
+        "copy_script": "Copy script",
+        "copied": "Copied"
+      },
+      "upload": {
+        "title": "Upload .mrhenc file",
+        "drop": "Drop the .mrhenc file here, or click to choose.",
+        "uploading": "Uploading…",
+        "ok": "Imported {inserted} new, {updated} updated, {skipped} skipped.",
+        "error_format": "Invalid file format.",
+        "error_version": "This .mrhenc was produced by an outdated extension. Please update."
+      }
+    },
+    "orcid": {
+      "title": "ORCID",
+      "intro": "Connect your ORCID account to pull works directly.",
+      "connect": "Connect ORCID",
+      "ok": "Imported {n} works from ORCID.",
+      "not_configured": "ORCID isn't configured on this server (missing ORCID_CLIENT_ID).",
+      "error": "ORCID import failed. {detail}"
+    },
+    "scopus": {
+      "title": "Scopus",
+      "intro": "Provide your Scopus Author ID to import indexed publications.",
+      "id_label": "Scopus Author ID",
+      "id_placeholder": "e.g. 12345678900",
+      "import_now": "Import",
+      "ok": "Imported {n} publications from Scopus.",
+      "not_configured": "Scopus isn't configured on this server (missing SCOPUS_API_KEY).",
+      "error": "Scopus import failed. {detail}"
+    }
+  },
   "directory": {
     "title": "Researchers",
     "subtitle": "{count, plural, =0 {No researchers yet} one {# researcher} other {# researchers}}",

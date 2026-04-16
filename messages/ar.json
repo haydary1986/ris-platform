@@ -279,6 +279,58 @@
     },
     "no_profile": "حسابك غير مرتبط بسجل باحث بعد. تفضّل بصفحة المطالبة أو راجع المسؤول."
   },
+  "import": {
+    "title": "استيراد المنشورات",
+    "subtitle": "ثلاث مصادر، دمج موحَّد. تُحلّ التعارضات بـ DOI أولاً ثم بمطابقة العنوان.",
+    "scholar": {
+      "title": "Google Scholar",
+      "intro": "Scholar بلا API عام. اختر إحدى الطريقتين أدناه.",
+      "extension": {
+        "title": "إضافة المتصفح (مفضّلة)",
+        "step_1": "نزّل وفُك ضغط إضافة RIS Scholar Importer.",
+        "step_2": "افتح chrome://extensions، فعّل وضع المطوّر، انقر \"تحميل غير مضغوط\"، واختر المجلد.",
+        "step_3": "افتح ملفك في Google Scholar ثم انقر أيقونة RIS في شريط الأدوات.",
+        "step_4": "احفظ ملف .mrhenc الذي تنزّله الإضافة، ثم ارفعه هنا.",
+        "download_zip": "تنزيل الإضافة (.zip)"
+      },
+      "console": {
+        "title": "سكربت Console (بديل)",
+        "intro": "استخدمه إذا تعذّر تثبيت الإضافة.",
+        "step_1": "افتح صفحة ملفك في Google Scholar.",
+        "step_2": "افتح DevTools → Console (F12).",
+        "step_3": "ألصق السكربت أدناه واضغط Enter. سيُنزَّل ملف .mrhenc.",
+        "step_4": "ارفع الملف هنا.",
+        "copy_script": "نسخ السكربت",
+        "copied": "تم النسخ"
+      },
+      "upload": {
+        "title": "رفع ملف .mrhenc",
+        "drop": "أسقط ملف .mrhenc هنا، أو انقر للاختيار.",
+        "uploading": "جارٍ الرفع…",
+        "ok": "أُضيفت {inserted} جديدة، حُدِّثت {updated}، تُجوهلت {skipped}.",
+        "error_format": "صيغة الملف غير صالحة.",
+        "error_version": "هذا الملف من إضافة قديمة. حدّث الإضافة."
+      }
+    },
+    "orcid": {
+      "title": "ORCID",
+      "intro": "اربط حساب ORCID لجلب الأعمال مباشرة.",
+      "connect": "الاتصال بـ ORCID",
+      "ok": "تم استيراد {n} عمل من ORCID.",
+      "not_configured": "ORCID غير مهيّأ على هذا الخادم (ينقص ORCID_CLIENT_ID).",
+      "error": "فشل استيراد ORCID. {detail}"
+    },
+    "scopus": {
+      "title": "Scopus",
+      "intro": "أدخل معرف Scopus لاستيراد المنشورات.",
+      "id_label": "معرف Scopus للمؤلف",
+      "id_placeholder": "مثال 12345678900",
+      "import_now": "استيراد",
+      "ok": "تم استيراد {n} منشور من Scopus.",
+      "not_configured": "Scopus غير مهيّأ (ينقص SCOPUS_API_KEY).",
+      "error": "فشل استيراد Scopus. {detail}"
+    }
+  },
   "directory": {
     "title": "الباحثون",
     "subtitle": "{count, plural, =0 {لا يوجد باحثون بعد} one {باحث واحد} two {باحثان} few {# باحثين} many {# باحثاً} other {# باحث}}",

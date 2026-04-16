@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>RIS Scholar Importer</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        font-size: 14px;
+        margin: 0;
+        padding: 16px;
+        width: 280px;
+        color: #0f172a;
+      }
+      h1 {
+        font-size: 14px;
+        margin: 0 0 6px;
+      }
+      p {
+        margin: 0 0 10px;
+        color: #64748b;
+        font-size: 12px;
+      }
+      button {
+        width: 100%;
+        padding: 8px 12px;
+        font-size: 13px;
+        border: 0;
+        border-radius: 6px;
+        background: #0f172a;
+        color: white;
+        cursor: pointer;
+      }
+      button:disabled {
+        background: #cbd5e1;
+        cursor: not-allowed;
+      }
+      .out {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #16a34a;
+      }
+      .err {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #dc2626;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>RIS Scholar Importer</h1>
+    <p>Open your Google Scholar profile, then click below to download a .mrhenc file.</p>
+    <button id="export">Export publications</button>
+    <div id="out"></div>
+    <script src="popup.js"></script>
+  </body>
+</html>
