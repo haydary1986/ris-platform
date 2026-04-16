@@ -1,7 +1,9 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
+import { buildLanguageAlternates, canonicalForLocale } from '@/lib/seo/site';
 import { createClient } from '@/lib/supabase/server';
 import { routing, type Locale } from '@/i18n/routing';
 import { parseFilters, decodeCursor } from '@/lib/directory/url';
@@ -23,6 +25,25 @@ import { Pagination } from '@/components/researchers/pagination';
 interface ResearchersPageProps {
   params: Promise<{ locale: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) return {};
+  const t = await getTranslations({ locale, namespace: 'directory' });
+  const alts = buildLanguageAlternates('/researchers');
+  return {
+    title: t('title'),
+    alternates: {
+      canonical: canonicalForLocale(locale as Locale, '/researchers'),
+      languages: alts.languages,
+    },
+    openGraph: { type: 'website', title: t('title'), locale },
+  };
 }
 
 async function fetchLookups(

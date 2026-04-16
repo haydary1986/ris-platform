@@ -24,6 +24,36 @@ const PROTECTED_PATTERNS: RegExp[] = [
 
 const SIGNED_OUT_ONLY_PATTERNS: RegExp[] = [/^\/(en|ar)\/sign-in(\/.*)?$/];
 
+// Task 83 — legacy URL redirect: /{username}/{lang} → /{lang}/researcher/{username}
+const LEGACY_PROFILE_PATTERN = /^\/([a-z0-9][a-z0-9_-]{1,63})\/(en|ar)\/?$/i;
+const RESERVED_FIRST_SEGMENTS = new Set([
+  'en',
+  'ar',
+  'researchers',
+  'researcher',
+  'manage-profile',
+  'admin',
+  'sign-in',
+  'auth',
+  'api',
+  'monitoring',
+  'sdg',
+  'college',
+  'department',
+  'publication',
+  'year',
+  'topic',
+  'search',
+  'analytics',
+  'about',
+  'contact',
+  'privacy',
+  'terms',
+  'claim-profile',
+  'sitemap.xml',
+  'robots.txt',
+]);
+
 function localeFromPath(pathname: string): Locale {
   const seg = pathname.split('/')[1];
   if (seg && (routing.locales as readonly string[]).includes(seg)) {
@@ -39,6 +69,14 @@ function copyCookies(from: NextResponse, to: NextResponse): void {
 }
 
 export async function proxy(request: NextRequest): Promise<NextResponse> {
+  // 0. Legacy /{username}/{lang} → /{lang}/researcher/{username} (Task 83).
+  const legacy = LEGACY_PROFILE_PATTERN.exec(request.nextUrl.pathname);
+  if (legacy && legacy[1] && legacy[2] && !RESERVED_FIRST_SEGMENTS.has(legacy[1].toLowerCase())) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/${legacy[2]}/researcher/${legacy[1]}`;
+    return NextResponse.redirect(url, 301);
+  }
+
   // 1. Locale routing
   const intlResponse = intlProxy(request);
 

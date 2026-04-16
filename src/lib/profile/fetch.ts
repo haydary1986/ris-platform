@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import type {
   ResearcherProfile,
@@ -16,7 +17,11 @@ import type {
   ProfileLookupMaps,
 } from './types';
 
-export async function fetchProfileByUsername(username: string): Promise<ProfilePayload | null> {
+// React `cache` dedupes calls within the same render — generateMetadata + the
+// page itself both ask for the same profile, but we only hit Supabase once.
+export const fetchProfileByUsername = cache(_fetchProfileByUsername);
+
+async function _fetchProfileByUsername(username: string): Promise<ProfilePayload | null> {
   let supabase: Awaited<ReturnType<typeof createClient>>;
   try {
     supabase = await createClient();

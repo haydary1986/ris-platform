@@ -9,6 +9,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { routing } from '@/i18n/routing';
+import { siteUrl } from '@/lib/seo/site';
 import '../globals.css';
 
 const inter = Inter({
@@ -30,8 +31,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'RIS — University of Mosul Researcher Directory',
+  metadataBase: new URL(siteUrl()),
+  title: {
+    default: 'RIS — University of Mosul Researcher Directory',
+    template: '%s · RIS',
+  },
   description: 'Research Information System for the University of Mosul.',
+  applicationName: 'RIS',
+  authors: [{ name: 'University of Mosul' }],
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+  },
 };
 
 export function generateStaticParams() {

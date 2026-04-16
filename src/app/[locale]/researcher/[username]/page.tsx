@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
@@ -12,11 +13,68 @@ import { TabProjects } from '@/components/profile/tab-projects';
 import { TabExperience } from '@/components/profile/tab-experience';
 import { TabThesis } from '@/components/profile/tab-thesis';
 import { TabActivities } from '@/components/profile/tab-activities';
+import { Breadcrumbs } from '@/components/seo/breadcrumbs';
+import { PersonSchema } from '@/components/seo/person-schema';
+import { PublicationsSchema } from '@/components/seo/scholarly-article-schema';
+import { buildLanguageAlternates, canonicalForLocale } from '@/lib/seo/site';
 
 export const revalidate = 300;
 
 interface ResearcherPageProps {
   params: Promise<{ locale: string; username: string }>;
+}
+
+export async function generateMetadata({ params }: ResearcherPageProps): Promise<Metadata> {
+  const { locale, username } = await params;
+  if (!hasLocale(routing.locales, locale)) return {};
+
+  const payload = await fetchProfileByUsername(username);
+  if (!payload) return { title: '404' };
+
+  const typedLocale = locale as Locale;
+  const { profile, lookups, publications } = payload;
+  const name = typedLocale === 'ar' ? profile.full_name_ar : profile.full_name_en;
+  const title = profile.academic_title_id ? lookups.titleById.get(profile.academic_title_id) : null;
+  const college = profile.college_id ? lookups.collegeById.get(profile.college_id) : null;
+
+  const titleStr = title ? (typedLocale === 'ar' ? title.name_ar : title.name_en) : null;
+  const collegeStr = college ? (typedLocale === 'ar' ? college.name_ar : college.name_en) : null;
+
+  const pageTitle = [name, titleStr, collegeStr].filter(Boolean).join(' — ');
+  const description = [
+    name,
+    titleStr,
+    collegeStr ? `at ${collegeStr}` : null,
+    'University of Mosul.',
+    publications.length > 0 ? `${publications.length} publications.` : null,
+    profile.scopus_h_index !== null ? `h-index ${profile.scopus_h_index}.` : null,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const path = `/researcher/${username}`;
+  const alts = buildLanguageAlternates(path);
+
+  return {
+    title: pageTitle,
+    description,
+    alternates: {
+      canonical: canonicalForLocale(typedLocale, path),
+      languages: alts.languages,
+    },
+    openGraph: {
+      type: 'profile',
+      title: pageTitle,
+      description,
+      locale: typedLocale,
+      images: profile.profile_image ? [{ url: profile.profile_image, alt: name }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: pageTitle,
+      description,
+    },
+  };
 }
 
 async function isOwnerOf(researcherId: string): Promise<boolean> {
@@ -47,8 +105,13 @@ export default async function ResearcherPage({ params }: ResearcherPageProps) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
   const profileUrl = `${siteUrl}/${locale}/researcher/${username}`;
 
+  const profileName =
+    typedLocale === 'ar' ? payload.profile.full_name_ar : payload.profile.full_name_en;
+
   return (
     <>
+      <PersonSchema payload={payload} locale={typedLocale} profileUrl={profileUrl} />
+      <PublicationsSchema payload={payload} />
       <ProfileHero
         payload={payload}
         locale={typedLocale}
@@ -56,14 +119,19 @@ export default async function ResearcherPage({ params }: ResearcherPageProps) {
         profileUrl={profileUrl}
       />
       <section className="container mx-auto px-4 py-8">
-        <ProfileTabs
-          overview={<TabOverview payload={payload} locale={typedLocale} />}
-          publications={<TabPublications payload={payload} />}
-          projects={<TabProjects payload={payload} locale={typedLocale} />}
-          experience={<TabExperience payload={payload} locale={typedLocale} />}
-          thesis={<TabThesis />}
-          activities={<TabActivities />}
+        <Breadcrumbs
+          items={[{ href: '/researchers', label: 'researchers' }, { label: profileName }]}
         />
+        <div className="mt-6">
+          <ProfileTabs
+            overview={<TabOverview payload={payload} locale={typedLocale} />}
+            publications={<TabPublications payload={payload} />}
+            projects={<TabProjects payload={payload} locale={typedLocale} />}
+            experience={<TabExperience payload={payload} locale={typedLocale} />}
+            thesis={<TabThesis />}
+            activities={<TabActivities />}
+          />
+        </div>
       </section>
     </>
   );
