@@ -279,6 +279,68 @@
     },
     "no_profile": "Your account isn't linked to a researcher record yet. Visit the claim page or contact an admin."
   },
+  "admin": {
+    "title": "Admin",
+    "forbidden": "You do not have admin privileges.",
+    "nav": {
+      "dashboard": "Dashboard",
+      "admins": "Manage admins",
+      "visibility": "Researcher visibility",
+      "settings": "Homepage settings",
+      "audit": "Audit log",
+      "colleges": "Colleges & departments",
+      "duplicates": "Duplicate publications"
+    },
+    "admins": {
+      "title": "Admins",
+      "email": "Email",
+      "role": "Role",
+      "add": "Add admin",
+      "add_email_placeholder": "user@uomosul.edu.iq",
+      "remove": "Remove",
+      "cannot_remove_self": "Cannot remove yourself.",
+      "added": "Admin added.",
+      "removed": "Admin removed.",
+      "error": "Operation failed: {detail}"
+    },
+    "visibility": {
+      "title": "Researcher visibility",
+      "name": "Name",
+      "username": "Username",
+      "is_public": "Public",
+      "override": "Override",
+      "none": "—",
+      "force_show": "Force show",
+      "force_hide": "Force hide",
+      "saved": "Updated."
+    },
+    "settings": {
+      "title": "Homepage settings",
+      "show_scopus_wos": "Show Scopus & WoS stats on homepage",
+      "saved": "Saved."
+    },
+    "audit": {
+      "title": "Audit log",
+      "actor": "Actor",
+      "action": "Action",
+      "entity": "Entity",
+      "date": "Date",
+      "empty": "No entries yet."
+    },
+    "colleges": {
+      "title": "Colleges & departments",
+      "college": "College",
+      "department": "Department",
+      "name_en": "Name (English)",
+      "name_ar": "Name (Arabic)",
+      "slug": "Slug",
+      "add": "Add",
+      "edit": "Edit",
+      "delete": "Delete",
+      "saved": "Saved.",
+      "deleted": "Deleted."
+    }
+  },
   "analytics": {
     "title": "Analytics",
     "subtitle": "Research output across the University.",
