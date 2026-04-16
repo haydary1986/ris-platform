@@ -106,6 +106,71 @@
       "error_generic": "تعذّر تسجيل دخولك. حاول مرة أخرى أو راجع المسؤول."
     }
   },
+  "profile": {
+    "edit": "تعديل الملف",
+    "share": "مشاركة الملف",
+    "qr_title": "رمز QR لهذا الملف",
+    "download_cv": "تنزيل السيرة الذاتية",
+    "tabs": {
+      "overview": "نظرة عامة",
+      "publications": "المنشورات",
+      "projects": "المشاريع",
+      "experience": "الخبرات",
+      "thesis": "الإشراف على الأطاريح",
+      "activities": "الأنشطة"
+    },
+    "overview": {
+      "biography": "السيرة",
+      "interests": "اهتمامات البحث",
+      "socials": "الحسابات",
+      "skills": "المهارات",
+      "languages": "اللغات",
+      "education": "التعليم",
+      "sdg_alignment": "أهداف SDG",
+      "contact": "التواصل"
+    },
+    "publications": {
+      "title": "المنشورات",
+      "filter_year": "السنة",
+      "filter_source": "المصدر",
+      "filter_type": "النوع",
+      "all": "الكل",
+      "doi": "DOI",
+      "open_access": "وصول مفتوح",
+      "scopus_citations": "اقتباسات Scopus: {n}",
+      "wos_citations": "اقتباسات WoS: {n}",
+      "scholar_citations": "اقتباسات Scholar: {n}",
+      "empty": "لا منشورات مسجَّلة بعد."
+    },
+    "projects": {
+      "active": "النشطة",
+      "completed": "المكتملة",
+      "funded_by": "ممول من {agency}",
+      "role": "الدور: {role}",
+      "empty": "لا مشاريع مسجَّلة بعد."
+    },
+    "experience": {
+      "work": "الخبرات الوظيفية",
+      "certifications": "الشهادات",
+      "awards": "الجوائز والتكريم",
+      "current": "حالياً",
+      "empty_work": "لا توجد خبرات مسجَّلة بعد.",
+      "empty_certs": "لا توجد شهادات مسجَّلة بعد.",
+      "empty_awards": "لا توجد جوائز مسجَّلة بعد."
+    },
+    "thesis": {
+      "phd": "إشراف على الدكتوراه",
+      "masters": "إشراف على الماجستير",
+      "empty": "لا سجلات إشراف بعد."
+    },
+    "activities": {
+      "editorial": "عضويات هيئات التحرير",
+      "conferences": "المؤتمرات",
+      "memberships": "العضويات المهنية",
+      "empty": "لا أنشطة مسجَّلة بعد."
+    },
+    "contact_hidden": "بيانات التواصل خاصة. سجّل الدخول للتواصل عبر المنصة."
+  },
   "directory": {
     "title": "الباحثون",
     "subtitle": "{count, plural, =0 {لا يوجد باحثون بعد} one {باحث واحد} two {باحثان} few {# باحثين} many {# باحثاً} other {# باحث}}",

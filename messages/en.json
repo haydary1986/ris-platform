@@ -106,6 +106,71 @@
       "error_generic": "We couldn't sign you in. Please try again or contact the admin."
     }
   },
+  "profile": {
+    "edit": "Edit profile",
+    "share": "Share profile",
+    "qr_title": "QR code for this profile",
+    "download_cv": "Download CV",
+    "tabs": {
+      "overview": "Overview",
+      "publications": "Publications",
+      "projects": "Projects",
+      "experience": "Experience",
+      "thesis": "Thesis advisory",
+      "activities": "Activities"
+    },
+    "overview": {
+      "biography": "Biography",
+      "interests": "Research interests",
+      "socials": "Social profiles",
+      "skills": "Skills",
+      "languages": "Languages",
+      "education": "Education",
+      "sdg_alignment": "SDG alignment",
+      "contact": "Contact"
+    },
+    "publications": {
+      "title": "Publications",
+      "filter_year": "Year",
+      "filter_source": "Source",
+      "filter_type": "Type",
+      "all": "All",
+      "doi": "DOI",
+      "open_access": "Open access",
+      "scopus_citations": "Scopus citations: {n}",
+      "wos_citations": "WoS citations: {n}",
+      "scholar_citations": "Scholar citations: {n}",
+      "empty": "No publications recorded yet."
+    },
+    "projects": {
+      "active": "Active",
+      "completed": "Completed",
+      "funded_by": "Funded by {agency}",
+      "role": "Role: {role}",
+      "empty": "No projects recorded yet."
+    },
+    "experience": {
+      "work": "Work experience",
+      "certifications": "Certifications",
+      "awards": "Awards & honours",
+      "current": "Present",
+      "empty_work": "No work history recorded yet.",
+      "empty_certs": "No certifications recorded yet.",
+      "empty_awards": "No awards recorded yet."
+    },
+    "thesis": {
+      "phd": "PhD supervisions",
+      "masters": "Master's supervisions",
+      "empty": "No thesis advisory records yet."
+    },
+    "activities": {
+      "editorial": "Editorial board memberships",
+      "conferences": "Conferences",
+      "memberships": "Professional memberships",
+      "empty": "No activities recorded yet."
+    },
+    "contact_hidden": "Contact details are private. Sign in to request via the platform."
+  },
   "directory": {
     "title": "Researchers",
     "subtitle": "{count, plural, =0 {No researchers yet} one {# researcher} other {# researchers}}",
