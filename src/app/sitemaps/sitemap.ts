@@ -101,6 +101,52 @@ export default async function sitemap(props: {
     })),
   );
 
+  // Hub entries: colleges, departments, years, publications (first chunk only).
+  let hubEntries: MetadataRoute.Sitemap = [];
+  if (id === 0) {
+    try {
+      const supabase = await createClient();
+      const [collegesRes, deptsRes, yearsRes, pubsRes] = await Promise.all([
+        supabase.from('colleges').select('slug, updated_at').order('slug'),
+        supabase.from('departments').select('slug, updated_at').order('slug'),
+        supabase
+          .from('researcher_publications_public')
+          .select('publication_year')
+          .not('publication_year', 'is', null),
+        supabase
+          .from('researcher_publications_public')
+          .select('id, updated_at')
+          .order('updated_at', { ascending: false })
+          .limit(2000),
+      ]);
+
+      const colleges = (collegesRes.data ?? []) as Array<{ slug: string; updated_at: string }>;
+      const depts = (deptsRes.data ?? []) as Array<{ slug: string; updated_at: string }>;
+      const pubYears = new Set(
+        ((yearsRes.data ?? []) as Array<{ publication_year: number }>).map(
+          (r) => r.publication_year,
+        ),
+      );
+      const pubs = (pubsRes.data ?? []) as Array<{ id: string; updated_at: string }>;
+
+      hubEntries = [
+        ...colleges.flatMap((c) => entry(`/college/${c.slug}`, c.updated_at)),
+        ...depts.flatMap((d) => entry(`/department/${d.slug}`, d.updated_at)),
+        ...Array.from(pubYears).flatMap((y) => entry(`/year/${y}`)),
+        ...pubs.flatMap((p) =>
+          routing.locales.map((locale) => ({
+            url: absoluteUrl(`/${locale}/publication/${p.id}`),
+            lastModified: new Date(p.updated_at),
+            changeFrequency: 'monthly' as const,
+            priority: 0.4,
+          })),
+        ),
+      ];
+    } catch {
+      // DB unreachable — skip hubs.
+    }
+  }
+
   // Static routes only on the first chunk so they aren't duplicated.
   const staticEntries: MetadataRoute.Sitemap =
     id === 0
@@ -116,5 +162,5 @@ export default async function sitemap(props: {
         ]
       : [];
 
-  return [...staticEntries, ...researcherEntries];
+  return [...staticEntries, ...hubEntries, ...researcherEntries];
 }
