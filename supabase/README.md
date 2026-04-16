@@ -13,6 +13,10 @@ SQL files in `migrations/` use the Supabase CLI naming convention
 | 3   | `20260416120200_researcher_child_tables.sql` | 2     | 18    |
 | 4   | `20260416120300_publications.sql`            | 2     | 19    |
 | 5   | `20260416120400_admins_app_settings.sql`     | 2     | 20    |
+| 6   | `20260416120500_audit_log.sql`               | 2     | 21    |
+| 7   | `20260416120600_performance_indexes.sql`     | 2     | 22    |
+| 8   | `20260416120700_pg_trgm.sql`                 | 2     | 23    |
+| 9   | `20260416120800_pgvector.sql`                | 2     | 24    |
 
 RLS, views, and policies (Phase 3, tasks 25–35) are intentionally **not**
 included here — they require the FIX-01..FIX-07 corrections from
