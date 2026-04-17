@@ -1,7 +1,3 @@
-// One-click Scholar import — receives data from bookmarklet via form POST
-// The bookmarklet scrapes Scholar and submits a form to this endpoint.
-// After import, redirects back to manage-profile with results.
-
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
@@ -25,38 +21,38 @@ const envelope = z.object({
 });
 
 export async function POST(request: Request): Promise<Response> {
-  const origin = process.env.NEXT_PUBLIC_SITE_URL || 'https://ris.uoturath.edu.iq';
-
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return NextResponse.redirect(`${origin}/en/sign-in`);
+    return NextResponse.json({ ok: false, error: 'Not authenticated' }, { status: 401 });
   }
 
   const { data: ownerRow } = await supabase.from('researchers_owner').select('id').maybeSingle();
   if (!ownerRow?.id) {
-    return NextResponse.redirect(`${origin}/en/manage-profile?import=no_profile`);
+    return NextResponse.json({ ok: false, error: 'No researcher profile found' }, { status: 404 });
   }
 
   try {
-    const formData = await request.formData();
-    const encoded = formData.get('data') as string;
-    if (!encoded) {
-      return NextResponse.redirect(`${origin}/en/manage-profile?import=scholar_empty`);
-    }
+    const contentType = request.headers.get('content-type') ?? '';
+    let json: unknown;
 
-    const decoded = Buffer.from(encoded, 'base64').toString('utf8');
-    const json = JSON.parse(decoded);
-
-    if (json.version !== 1) {
-      return NextResponse.redirect(`${origin}/en/manage-profile?import=scholar_version`);
+    if (contentType.includes('application/json')) {
+      json = await request.json();
+    } else {
+      const formData = await request.formData();
+      const encoded = formData.get('data') as string;
+      if (!encoded) {
+        return NextResponse.json({ ok: false, error: 'No data provided' }, { status: 400 });
+      }
+      const decoded = Buffer.from(encoded, 'base64').toString('utf8');
+      json = JSON.parse(decoded);
     }
 
     const parsed = envelope.safeParse(json);
     if (!parsed.success) {
-      return NextResponse.redirect(`${origin}/en/manage-profile?import=scholar_invalid`);
+      return NextResponse.json({ ok: false, error: 'Invalid data format' }, { status: 400 });
     }
 
     const payload = parsed.data.publications.map((p) => ({
@@ -70,14 +66,13 @@ export async function POST(request: Request): Promise<Response> {
     });
 
     const result = data as { inserted?: number; updated?: number; skipped?: number } | null;
-    const params = new URLSearchParams({
-      import: 'scholar_ok',
-      inserted: String(result?.inserted ?? 0),
-      updated: String(result?.updated ?? 0),
-    });
 
-    return NextResponse.redirect(`${origin}/en/manage-profile?${params}`);
+    return NextResponse.json({
+      ok: true,
+      inserted: result?.inserted ?? 0,
+      updated: result?.updated ?? 0,
+    });
   } catch {
-    return NextResponse.redirect(`${origin}/en/manage-profile?import=scholar_error`);
+    return NextResponse.json({ ok: false, error: 'Import failed' }, { status: 500 });
   }
 }
