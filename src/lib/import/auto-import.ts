@@ -100,8 +100,8 @@ export async function autoImportForUser(
       })
       .eq('id', researcher.id);
 
-    // Fetch publications — only those where the author is affiliated with our institution
-    const worksUrl = `${OPENALEX_API}/works?filter=author.id:${author.id},institutions.id:${INSTITUTION_ID}&per_page=50&sort=publication_year:desc&mailto=ris@${INSTITUTION_DOMAIN}`;
+    // Fetch ALL publications for this verified researcher (acts as their CV)
+    const worksUrl = `${OPENALEX_API}/works?filter=author.id:${author.id}&per_page=50&sort=publication_year:desc&mailto=ris@${INSTITUTION_DOMAIN}`;
     const worksRes = await fetch(worksUrl, { cache: 'no-store' });
 
     let pubCount = 0;
