@@ -59,7 +59,7 @@ export default async function HomePage({ params }: HomePageProps) {
       <Stats locale={typedLocale} />
       <FeaturedResearchers locale={typedLocale} />
       <Mission />
-      <SdgGrid />
+      <SdgGrid locale={typedLocale} />
     </>
   );
 }
