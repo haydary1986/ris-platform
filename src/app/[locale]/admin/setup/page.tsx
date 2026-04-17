@@ -46,6 +46,7 @@ async function getServices(): Promise<ServiceCheck[]> {
         'integration.sentry.dsn',
         'integration.orcid.client_id',
         'integration.orcid.client_secret',
+        'integration.wos.api_key',
         'integration.scopus.api_key',
         'integration.google.site_verification',
         'integration.indexnow.key',
@@ -177,6 +178,24 @@ async function getServices(): Promise<ServiceCheck[]> {
       ],
       link: 'https://dev.elsevier.com/',
       linkLabel: 'Elsevier Developer Portal',
+    },
+    {
+      name: 'Web of Science (Clarivate)',
+      nameAr: 'Web of Science (كلاريفيت)',
+      icon: <BarChart3 className="size-5" />,
+      configured: Boolean(dbSettings['integration.wos.api_key']),
+      required: false,
+      envVars: ['WOS_API_KEY'],
+      steps: [
+        'Go to Admin → Integrations and enter your WoS API Key.',
+        'Apply at developer.clarivate.com for WoS Starter API (free for institutions).',
+      ],
+      stepsAr: [
+        'اذهب إلى الإدارة → التكاملات وأدخل مفتاح WoS API.',
+        'قدّم طلباً في developer.clarivate.com للحصول على WoS Starter API.',
+      ],
+      link: 'https://developer.clarivate.com/apis/wos-starter',
+      linkLabel: 'Clarivate Developer Portal',
     },
     {
       name: 'Google Search Console (SEO indexing)',

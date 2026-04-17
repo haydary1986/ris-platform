@@ -107,6 +107,45 @@ const SERVICES: ServiceConfig[] = [
     ],
   },
   {
+    id: 'wos',
+    title: 'Web of Science (Clarivate)',
+    titleAr: 'Web of Science (كلاريفيت)',
+    description:
+      'Apply at developer.clarivate.com for WoS Starter API (free for institutions). Enter your API key to enable WoS publication import and metrics.',
+    descriptionAr:
+      'قدّم طلباً في developer.clarivate.com للحصول على WoS Starter API (مجاني للمؤسسات). أدخل مفتاح API لتفعيل استيراد المنشورات ومؤشرات WoS.',
+    link: 'https://developer.clarivate.com/apis/wos-starter',
+    linkLabel: 'Clarivate Developer Portal',
+    fields: [
+      {
+        key: 'integration.wos.api_key',
+        label: 'API Key',
+        labelAr: 'مفتاح API',
+        placeholder: '********',
+        secret: true,
+      },
+    ],
+  },
+  {
+    id: 'openalex',
+    title: 'OpenAlex (Open Research Data)',
+    titleAr: 'OpenAlex (بيانات بحثية مفتوحة)',
+    description:
+      'Free and open — no API key needed. Used automatically for institution stats, leaderboard, and SDG data. Enter your institution ID to customize.',
+    descriptionAr:
+      'مجاني ومفتوح — لا يحتاج مفتاح. يُستخدم تلقائياً للإحصائيات والتصنيف وأهداف التنمية. أدخل معرّف المؤسسة للتخصيص.',
+    link: 'https://openalex.org',
+    linkLabel: 'OpenAlex',
+    fields: [
+      {
+        key: 'integration.openalex.institution_id',
+        label: 'Institution ID',
+        labelAr: 'معرّف المؤسسة',
+        placeholder: 'I2801460691',
+      },
+    ],
+  },
+  {
     id: 'gsc',
     title: 'Google Search Console (SEO)',
     titleAr: 'Google Search Console (فهرسة SEO)',
