@@ -82,7 +82,10 @@ export async function GET(request: Request): Promise<Response> {
         journal_name: (w['journal-title'] as Record<string, string>)?.value ?? null,
         publication_year: (w['publication-date'] as Record<string, Record<string, string>>)?.year
           ?.value
-          ? Number((w['publication-date'] as Record<string, Record<string, string>>).year.value)
+          ? Number(
+              (w['publication-date'] as Record<string, Record<string, string>> | undefined)?.year
+                ?.value,
+            )
           : null,
         doi: ids.find((x) => x['external-id-type'] === 'doi')?.['external-id-value'] ?? null,
         url: (w.url as Record<string, string>)?.value ?? null,

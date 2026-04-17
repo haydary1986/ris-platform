@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useTransition } from 'react';
-import { Plus, Trash } from 'lucide-react';
+import { useRef, useState, useTransition } from 'react';
+import { Plus, Trash, Download, FileUp, Upload, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
@@ -50,13 +50,8 @@ export function PublicationsTab({
       <Card>
         <CardHeader className="flex-row items-center justify-between">
           <CardTitle className="text-sm uppercase tracking-wide">{t('list_title')}</CardTitle>
-          <div className="flex gap-2">
-            <Button type="button" variant="outline" size="sm" disabled title={t('import_phase10')}>
-              {t('import_scholar')}
-            </Button>
-            <Button type="button" variant="outline" size="sm" disabled title={t('import_phase10')}>
-              {t('import_orcid')}
-            </Button>
+          <div className="flex flex-wrap gap-2">
+            <ScholarQuickImport />
             <Button type="button" size="sm" onClick={() => setOpen(true)}>
               <Plus className="size-4" />
               {t('add_manual')}
@@ -296,5 +291,137 @@ function AddPublicationDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+// --- Google Scholar Quick Import (one-click upload) ---
+function ScholarQuickImport() {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [isPending, startTransition] = useTransition();
+  const [showGuide, setShowGuide] = useState(false);
+
+  function uploadFile(file: File) {
+    startTransition(async () => {
+      const text = await file.text();
+      const res = await fetch('/api/import/scholar', { method: 'POST', body: text });
+      const json = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        inserted?: number;
+        updated?: number;
+        skipped?: number;
+        error?: string;
+      };
+      if (res.ok && json.ok) {
+        toast.success(`Imported ${json.inserted ?? 0} new, ${json.updated ?? 0} updated`);
+      } else {
+        toast.error(json.error ?? 'Import failed');
+      }
+    });
+  }
+
+  return (
+    <>
+      <input
+        ref={fileRef}
+        type="file"
+        accept=".mrhenc"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) uploadFile(f);
+          e.target.value = '';
+        }}
+      />
+
+      <Button type="button" variant="outline" size="sm" onClick={() => setShowGuide(true)}>
+        <Upload className="size-4" />
+        Google Scholar
+      </Button>
+
+      <Dialog open={showGuide} onOpenChange={setShowGuide}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Import from Google Scholar</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 text-sm">
+            <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
+              <p className="font-semibold">Step 1: Get your publications</p>
+              <ol className="list-decimal ms-5 space-y-2 text-muted-foreground">
+                <li>
+                  Open your{' '}
+                  <a
+                    href="https://scholar.google.com/citations"
+                    target="_blank"
+                    rel="noopener"
+                    className="text-primary underline"
+                  >
+                    Google Scholar profile
+                  </a>
+                </li>
+                <li>Click &quot;Show more&quot; until all publications are visible</li>
+                <li>
+                  Open browser DevTools (<kbd className="rounded bg-muted px-1 text-xs">F12</kbd> →
+                  Console)
+                </li>
+                <li>Paste this script and press Enter:</li>
+              </ol>
+              <div className="relative">
+                <pre className="bg-muted rounded-md p-3 text-[10px] max-h-32 overflow-auto">
+                  <code>{`(function(){var p=[];document.querySelectorAll('#gsc_a_b .gsc_a_tr').forEach(function(r){var t=r.querySelector('.gsc_a_at');var g=r.querySelectorAll('.gs_gray');var y=r.querySelector('.gsc_a_h');var c=r.querySelector('.gsc_a_ac');if(!t)return;p.push({title:t.textContent.trim(),authors:g[0]?g[0].textContent.split(',').map(s=>s.trim()):[],journal_name:g[1]?g[1].textContent.trim():null,publication_year:y&&/^\\d{4}$/.test(y.textContent)?+y.textContent:null,scholar_citations:c&&/^\\d+$/.test(c.textContent.trim())?+c.textContent:0})});var d={version:1,provider:'scholar',scraped_at:new Date().toISOString(),publications:p};var e=btoa(unescape(encodeURIComponent(JSON.stringify(d))));var b=new Blob([e]);var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='scholar-'+Date.now()+'.mrhenc';a.click();console.log('Exported',p.length,'publications')})();`}</code>
+                </pre>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="xs"
+                  className="absolute top-1 end-1"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `(function(){var p=[];document.querySelectorAll('#gsc_a_b .gsc_a_tr').forEach(function(r){var t=r.querySelector('.gsc_a_at');var g=r.querySelectorAll('.gs_gray');var y=r.querySelector('.gsc_a_h');var c=r.querySelector('.gsc_a_ac');if(!t)return;p.push({title:t.textContent.trim(),authors:g[0]?g[0].textContent.split(',').map(s=>s.trim()):[],journal_name:g[1]?g[1].textContent.trim():null,publication_year:y&&/^\\\\d{4}$/.test(y.textContent)?+y.textContent:null,scholar_citations:c&&/^\\\\d+$/.test(c.textContent.trim())?+c.textContent:0})});var d={version:1,provider:'scholar',scraped_at:new Date().toISOString(),publications:p};var e=btoa(unescape(encodeURIComponent(JSON.stringify(d))));var b=new Blob([e]);var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='scholar-'+Date.now()+'.mrhenc';a.click();console.log('Exported',p.length,'publications')})();`,
+                    );
+                    toast.success('Copied!');
+                  }}
+                >
+                  Copy
+                </Button>
+              </div>
+              <p className="text-muted-foreground">
+                A <code>.mrhenc</code> file will download automatically.
+              </p>
+            </div>
+
+            <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
+              <p className="font-semibold">Step 2: Upload the file</p>
+              <Button
+                type="button"
+                onClick={() => {
+                  setShowGuide(false);
+                  fileRef.current?.click();
+                }}
+                disabled={isPending}
+                className="w-full"
+              >
+                {isPending ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <FileUp className="size-4" />
+                )}
+                Upload .mrhenc file
+              </Button>
+            </div>
+
+            <div className="text-center">
+              <a
+                href="/extension/ris-scholar-importer.zip"
+                download
+                className="text-primary text-xs inline-flex items-center gap-1 hover:underline"
+              >
+                <Download className="size-3" />
+                Or download Chrome extension (alternative)
+              </a>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
