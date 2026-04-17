@@ -53,6 +53,7 @@ export default async function AuthLogsPage({ params }: Props) {
     id: string;
     action: string;
     email: string | null;
+    actor_name: string | null;
     ip_address: string | null;
     created_at: string;
   }>;
@@ -102,10 +103,8 @@ export default async function AuthLogsPage({ params }: Props) {
           <thead className="bg-muted/50">
             <tr>
               <th className="px-4 py-2 text-start font-medium">{isAr ? 'الحدث' : 'Event'}</th>
-              <th className="px-4 py-2 text-start font-medium">{isAr ? 'البريد' : 'Email'}</th>
-              <th className="px-4 py-2 text-start font-medium">
-                {isAr ? 'عنوان IP' : 'IP Address'}
-              </th>
+              <th className="px-4 py-2 text-start font-medium">{isAr ? 'المستخدم' : 'User'}</th>
+              <th className="px-4 py-2 text-start font-medium">{isAr ? 'عنوان IP' : 'IP'}</th>
               <th className="px-4 py-2 text-start font-medium">{isAr ? 'الوقت' : 'Time'}</th>
             </tr>
           </thead>
@@ -119,11 +118,14 @@ export default async function AuthLogsPage({ params }: Props) {
                       {isAr ? (config?.labelAr ?? e.action) : (config?.label ?? e.action)}
                     </Badge>
                   </td>
-                  <td className="px-4 py-2 text-xs text-muted-foreground font-mono">
-                    {e.email ?? '—'}
+                  <td className="px-4 py-2">
+                    <div className="text-xs font-medium">{e.actor_name ?? '—'}</div>
+                    <div className="text-[10px] text-muted-foreground font-mono">
+                      {e.email ?? '—'}
+                    </div>
                   </td>
                   <td className="px-4 py-2 text-xs text-muted-foreground font-mono">
-                    {e.ip_address || '—'}
+                    {e.ip_address ?? '—'}
                   </td>
                   <td className="px-4 py-2 text-xs text-muted-foreground tabular-nums">
                     {new Date(e.created_at).toLocaleString(locale, {
