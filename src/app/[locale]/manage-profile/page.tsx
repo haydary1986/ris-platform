@@ -38,13 +38,21 @@ export default async function ManageProfilePage({ params }: ManageProfilePagePro
   } = await supabase.auth.getUser();
   if (!user) redirect(`/${locale}/sign-in`);
 
-  // Find the researcher row owned by this user.
-  const { data: ownerRow } = await supabase
-    .from('researchers_owner')
-    .select('username')
-    .maybeSingle();
-
   const t = await getTranslations('manage');
+
+  let ownerRow: { username: string } | null = null;
+  try {
+    const res = await supabase.from('researchers_owner').select('username').maybeSingle();
+    ownerRow = res.data;
+  } catch (e) {
+    return (
+      <main className="container mx-auto px-4 py-12">
+        <div className="bg-destructive/10 rounded-lg border border-destructive/30 p-6 text-center">
+          <p className="text-destructive text-sm">Error loading profile: {String(e)}</p>
+        </div>
+      </main>
+    );
+  }
 
   if (!ownerRow?.username) {
     return (
@@ -56,7 +64,18 @@ export default async function ManageProfilePage({ params }: ManageProfilePagePro
     );
   }
 
-  const payload = await fetchProfileByUsername(ownerRow.username);
+  let payload: Awaited<ReturnType<typeof fetchProfileByUsername>> = null;
+  try {
+    payload = await fetchProfileByUsername(ownerRow.username);
+  } catch (e) {
+    return (
+      <main className="container mx-auto px-4 py-12">
+        <div className="bg-destructive/10 rounded-lg border border-destructive/30 p-6 text-center">
+          <p className="text-destructive text-sm">Error fetching profile: {String(e)}</p>
+        </div>
+      </main>
+    );
+  }
   if (!payload) notFound();
 
   // Re-fetch the OWNER row (full columns) directly — researchers_public hides
