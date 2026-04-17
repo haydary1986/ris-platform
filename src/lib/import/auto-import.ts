@@ -147,3 +147,96 @@ export async function autoImportForUser(
     return { imported: false, publications: 0, error: String(e) };
   }
 }
+
+// --- ORCID Public API auto-import (no OAuth needed) ---
+
+export async function autoImportFromOrcid(
+  userId: string,
+  email: string,
+): Promise<{
+  imported: boolean;
+  publications: number;
+}> {
+  try {
+    const supabase = createAdminClient();
+
+    const { data: researcher } = await supabase
+      .from('researchers')
+      .select('id')
+      .eq('user_id', userId)
+      .maybeSingle();
+    if (!researcher) return { imported: false, publications: 0 };
+
+    // Search ORCID by email (public API, no auth needed)
+    const searchRes = await fetch(
+      `https://pub.orcid.org/v3.0/search/?q=email:${encodeURIComponent(email)}`,
+      { headers: { Accept: 'application/json' }, cache: 'no-store' },
+    );
+    if (!searchRes.ok) return { imported: false, publications: 0 };
+
+    const searchData = (await searchRes.json()) as {
+      result?: Array<{ 'orcid-identifier'?: { path?: string } }>;
+    };
+    const orcidId = searchData.result?.[0]?.['orcid-identifier']?.path;
+    if (!orcidId) return { imported: false, publications: 0 };
+
+    // Fetch works
+    const worksRes = await fetch(`https://pub.orcid.org/v3.0/${orcidId}/works`, {
+      headers: { Accept: 'application/json' },
+      cache: 'no-store',
+    });
+    if (!worksRes.ok) return { imported: false, publications: 0 };
+
+    const worksData = (await worksRes.json()) as {
+      group?: Array<{ 'work-summary'?: Array<Record<string, unknown>> }>;
+    };
+
+    const pubs = (worksData.group ?? []).flatMap((g) =>
+      (g['work-summary'] ?? [])
+        .slice(0, 1)
+        .map((w) => {
+          const titleObj = w.title as Record<string, Record<string, string>> | undefined;
+          const title = titleObj?.title?.value ?? '';
+          const yearObj = w['publication-date'] as
+            | Record<string, Record<string, string>>
+            | undefined;
+          const year = yearObj?.year?.value ? Number(yearObj.year.value) : null;
+          const journalObj = w['journal-title'] as Record<string, string> | undefined;
+          const journal = journalObj?.value ?? null;
+          const idsObj = w['external-ids'] as
+            | Record<string, Array<Record<string, string>>>
+            | undefined;
+          const ids = idsObj?.['external-id'] ?? [];
+          const doi =
+            ids.find((x) => x['external-id-type'] === 'doi')?.['external-id-value'] ?? null;
+          return { title, doi, publication_year: year, journal_name: journal };
+        })
+        .filter((p) => p.title),
+    );
+
+    if (pubs.length === 0) return { imported: false, publications: 0 };
+
+    // Save ORCID ID to social profiles
+    await supabase.from('researcher_social_profiles').upsert(
+      {
+        researcher_id: researcher.id,
+        platform: 'orcid',
+        username: orcidId,
+        url: `https://orcid.org/${orcidId}`,
+        display_order: 0,
+      },
+      { onConflict: 'researcher_id,platform' },
+    );
+
+    // Import publications
+    const { data: result } = await supabase.rpc('merge_publications', {
+      p_researcher_id: researcher.id,
+      p_publications: pubs,
+      p_source_name: 'openalex',
+    });
+
+    return { imported: true, publications: (result as { inserted?: number })?.inserted ?? 0 };
+  } catch {
+    return { imported: false, publications: 0 };
+  }
+}

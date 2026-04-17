@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { routing } from '@/i18n/routing';
-import { autoImportForUser } from '@/lib/import/auto-import';
+import { autoImportForUser, autoImportFromOrcid } from '@/lib/import/auto-import';
 
 const SAFE_NEXT = /^\/(en|ar)\/[a-zA-Z0-9_\-/]*$/;
 
@@ -32,12 +32,16 @@ export async function GET(request: Request) {
     );
   }
 
-  // Auto-import publications from OpenAlex on first sign-in (background, non-blocking)
+  // Auto-import on first sign-in (background, non-blocking)
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (user?.email) {
-    autoImportForUser(user.id, user.email).catch(() => {});
+    // Try both sources in parallel — ORCID (by email) + OpenAlex (by name)
+    Promise.all([
+      autoImportFromOrcid(user.id, user.email),
+      autoImportForUser(user.id, user.email),
+    ]).catch(() => {});
   }
 
   return NextResponse.redirect(new URL(next, origin));
