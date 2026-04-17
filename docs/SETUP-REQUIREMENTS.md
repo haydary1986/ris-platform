@@ -5,40 +5,43 @@
 
 ---
 
-## 1. Supabase (حرج — لا تعمل المنصة بدونه)
+## 1. Supabase — Self-hosted على سيرفرك (حرج — لا تعمل المنصة بدونه)
 
-### الخيار أ: Supabase Cloud (الأسهل)
+> **لا يحتاج اشتراك في أي موقع.** Supabase مفتوح المصدر بالكامل.
+> Docker images تُسحب مجاناً من Docker Hub بدون حساب أو ترخيص.
+> كل البيانات تبقى على سيرفرك — لا حدود على الحجم أو الطلبات.
 
-1. سجّل في [supabase.com](https://supabase.com) وأنشئ مشروعاً جديداً.
-2. من **Settings → API** انسخ:
-   - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
-   - `anon/public key` → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `service_role key` → `SUPABASE_SERVICE_ROLE_KEY` (سرّي!)
-3. طبّق الـ migrations:
+### خطوات التثبيت (عبر Coolify)
+
+1. في Coolify → Resources → Deploy from template → **Supabase (self-hosted)**.
+2. عدّل المتغيرات:
+   - `POSTGRES_PASSWORD` — 32+ حرف عشوائي (ولّده بـ `openssl rand -hex 24`)
+   - `JWT_SECRET` — 32+ حرف (ولّده بـ `openssl rand -hex 24`)
+   - `SITE_URL` = `https://yourdomain.com`
+   - `API_EXTERNAL_URL` = `https://api-ris.yourdomain.com`
+3. `ANON_KEY` و `SERVICE_ROLE_KEY` تُولَّد تلقائياً من `JWT_SECRET` (Coolify يتكفّل بذلك).
+4. اضغط **Deploy** — ستعمل 5-7 containers (PostgreSQL + Auth + REST + Storage + Kong).
+5. بعد التشغيل، طبّق الـ migrations:
    ```bash
-   # من جذر المشروع:
-   npx supabase link --project-ref <your-ref>
-   npx supabase db push
-   # أو يدوياً:
+   # عبر psql من جهازك (اتصل بـ PostgreSQL المُثبّت على السيرفر):
    for f in supabase/migrations/*.sql; do
-     psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$f"
+     psql "postgresql://postgres:YOUR_PASSWORD@YOUR_VPS_IP:5432/postgres" \
+       -v ON_ERROR_STOP=1 -f "$f"
    done
    ```
-4. تحقق:
+   أو ألصق كل ملف migration بالترتيب في **Coolify → Services → Supabase → Postgres → Terminal/SQL**.
+6. تحقق من RLS:
    ```bash
    psql "$DATABASE_URL" -f supabase/tests/rls_smoke.sql
    ```
 
-### الخيار ب: Self-hosted على Coolify (موصى به للإنتاج)
+### من أين أحصل على المفاتيح؟
 
-1. في Coolify → Resources → Deploy from template → **Supabase (self-hosted)**.
-2. عدّل المتغيرات:
-   - `POSTGRES_PASSWORD` — 32+ حرف عشوائي
-   - `JWT_SECRET` — 32+ حرف
-   - `SITE_URL` = `https://yourdomain.com`
-   - `API_EXTERNAL_URL` = `https://api-ris.yourdomain.com`
-3. `ANON_KEY` و `SERVICE_ROLE_KEY` تُولَّد من `JWT_SECRET` (Coolify يفعل هذا تلقائياً).
-4. بعد التشغيل، طبّق الـ migrations عبر psql أو SQL editor في Coolify.
+| المفتاح                         | المصدر                                                           |
+| ------------------------------- | ---------------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | `https://api-ris.yourdomain.com` (عنوان Kong gateway على سيرفرك) |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | يُولَّد تلقائياً في Coolify عند deploy — انسخه من متغيرات البيئة |
+| `SUPABASE_SERVICE_ROLE_KEY`     | نفس المكان — **سرّي، لا تشاركه!**                                |
 
 ---
 
