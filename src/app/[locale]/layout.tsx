@@ -73,6 +73,14 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       className={`${inter.variable} ${cairo.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__SUPABASE_CONFIG__=${JSON.stringify({
+              url: process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
+              anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '',
+            })}`,
+          }}
+        />
         <NextIntlClientProvider messages={messages} locale={locale}>
           <ThemeProvider
             attribute="class"
