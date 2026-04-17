@@ -331,15 +331,13 @@ export async function savePublication(input: PublicationInput): Promise<ActionRe
       .map((s) => s.trim())
       .filter(Boolean);
     if (list.length > 0) {
-      await supabase
-        .from('researcher_publication_coauthors')
-        .insert(
-          list.map((author_name, idx) => ({
-            publication_id: pub.id,
-            author_name,
-            author_order: idx + 1,
-          })),
-        );
+      await supabase.from('researcher_publication_coauthors').insert(
+        list.map((author_name, idx) => ({
+          publication_id: pub.id,
+          author_name,
+          author_order: idx + 1,
+        })),
+      );
     }
   }
 
@@ -349,4 +347,31 @@ export async function savePublication(input: PublicationInput): Promise<ActionRe
 
 export async function deletePublication(id: string): Promise<ActionResult> {
   return deleteChild('researcher_publications', id);
+}
+
+export async function saveBasicOnboarding(input: {
+  full_name_en: string;
+  full_name_ar: string;
+  college_id: string;
+  department_id: string;
+  academic_title_id: string;
+}): Promise<ActionResult> {
+  const rid = await ownResearcherId();
+  if (!rid) return { ok: false, error: 'No profile found' };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('researchers')
+    .update({
+      full_name_en: input.full_name_en,
+      full_name_ar: input.full_name_ar,
+      college_id: input.college_id,
+      department_id: input.department_id,
+      academic_title_id: input.academic_title_id,
+    })
+    .eq('id', rid);
+
+  if (error) return { ok: false, error: error.message };
+  revalidatePath('/');
+  return { ok: true };
 }
