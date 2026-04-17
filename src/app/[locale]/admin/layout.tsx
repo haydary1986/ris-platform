@@ -21,6 +21,7 @@ const NAV_KEYS = [
   'visibility',
   'settings',
   'audit',
+  'auth-logs',
   'colleges',
 ] as const;
 
