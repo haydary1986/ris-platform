@@ -22,7 +22,7 @@ export function Hero() {
 
   const dots = useMemo(
     () =>
-      Array.from({ length: 80 }, (_, i) => ({
+      Array.from({ length: 50 }, (_, i) => ({
         x: seededRandom(i * 7) * 100,
         y: seededRandom(i * 13) * 100,
         baseSize: 1.5 + seededRandom(i * 19) * 2,
@@ -69,14 +69,19 @@ export function Hero() {
     const globeCenterY = () => h * 0.5;
     const globeRadius = () => Math.min(w, h) * 0.3;
 
-    // Convert degree coords to radians
+    // Pre-compute radians + trig values once (not every frame)
     const landPaths = LAND_POLYGONS.map((poly) =>
-      poly.map(([lat, lng]) => ({ lat: (lat * Math.PI) / 180, lng: (lng * Math.PI) / 180 })),
+      poly.map(([lat, lng]) => {
+        const latR = (lat * Math.PI) / 180;
+        const lngR = (lng * Math.PI) / 180;
+        return { cosLat: Math.cos(latR), sinLat: Math.sin(latR), lngR };
+      }),
     );
-    const iraqPath = IRAQ_POLYGON.map(([lat, lng]) => ({
-      lat: (lat * Math.PI) / 180,
-      lng: (lng * Math.PI) / 180,
-    }));
+    const iraqPath = IRAQ_POLYGON.map(([lat, lng]) => {
+      const latR = (lat * Math.PI) / 180;
+      const lngR = (lng * Math.PI) / 180;
+      return { cosLat: Math.cos(latR), sinLat: Math.sin(latR), lngR };
+    });
 
     function draw() {
       ctx!.clearRect(0, 0, w, h);
@@ -120,11 +125,11 @@ export function Hero() {
           const bx = (dots[j]!.x / 100) * w;
           const by = (dots[j]!.y / 100) * h;
           const dist = Math.sqrt((ax - bx) ** 2 + (ay - by) ** 2);
-          if (dist < 120) {
+          if (dist < 100) {
             ctx!.beginPath();
             ctx!.moveTo(ax, ay);
             ctx!.lineTo(bx, by);
-            ctx!.strokeStyle = `${lineColor}${0.06 * (1 - dist / 120)})`;
+            ctx!.strokeStyle = `${lineColor}${0.06 * (1 - dist / 100)})`;
             ctx!.lineWidth = 0.5;
             ctx!.stroke();
           }
@@ -183,15 +188,17 @@ export function Hero() {
         let first = true;
         let visible = false;
         for (const p of poly) {
-          const rl = p.lng + globeRotation;
-          const z3d = Math.cos(p.lat) * Math.cos(rl);
+          const rl = p.lngR + globeRotation;
+          const sinRl = Math.sin(rl);
+          const cosRl = Math.cos(rl);
+          const z3d = p.cosLat * cosRl;
           if (z3d < -0.05) {
             first = true;
             continue;
           }
           visible = true;
-          const px = cx + Math.cos(p.lat) * Math.sin(rl) * r;
-          const py = cy - Math.sin(p.lat) * r;
+          const px = cx + p.cosLat * sinRl * r;
+          const py = cy - p.sinLat * r;
           if (first) {
             ctx!.moveTo(px, py);
             first = false;
@@ -210,11 +217,11 @@ export function Hero() {
       // Iraq — bright glow
       const iraqScreenPoints: Array<{ x: number; y: number; z: number }> = [];
       for (const p of iraqPath) {
-        const rl = p.lng + globeRotation;
-        const z3d = Math.cos(p.lat) * Math.cos(rl);
+        const rl = p.lngR + globeRotation;
+        const z3d = p.cosLat * Math.cos(rl);
         iraqScreenPoints.push({
-          x: cx + Math.cos(p.lat) * Math.sin(rl) * r,
-          y: cy - Math.sin(p.lat) * r,
+          x: cx + p.cosLat * Math.sin(rl) * r,
+          y: cy - p.sinLat * r,
           z: z3d,
         });
       }
