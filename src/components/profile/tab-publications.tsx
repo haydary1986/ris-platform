@@ -84,7 +84,7 @@ export function TabPublications({ payload }: TabPublicationsProps) {
             }}
           >
             <SelectTrigger id="pub-year">
-              <SelectValue displayValue={year === ALL ? t('all') : year} />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value={ALL}>{t('all')}</SelectItem>
@@ -107,13 +107,7 @@ export function TabPublications({ payload }: TabPublicationsProps) {
             }}
           >
             <SelectTrigger id="pub-source">
-              <SelectValue
-                displayValue={
-                  source === ALL
-                    ? t('all')
-                    : (lookups.publicationSourceById.get(source)?.name ?? source)
-                }
-              />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value={ALL}>{t('all')}</SelectItem>
@@ -136,15 +130,7 @@ export function TabPublications({ payload }: TabPublicationsProps) {
             }}
           >
             <SelectTrigger id="pub-type">
-              <SelectValue
-                displayValue={
-                  type === ALL
-                    ? t('all')
-                    : (locale === 'ar' && lookups.publicationTypeById.get(type)?.name_ar) ||
-                      lookups.publicationTypeById.get(type)?.name_en ||
-                      type
-                }
-              />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value={ALL}>{t('all')}</SelectItem>

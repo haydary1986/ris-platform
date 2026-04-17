@@ -106,15 +106,7 @@ export function AnalyticsDashboard({ summary, colleges, locale, filters }: Props
             <Label htmlFor="college_filter">{t('filters.college')}</Label>
             <Select value={col} onValueChange={(v) => setCol(v ?? ALL)}>
               <SelectTrigger id="college_filter" className="w-48">
-                <SelectValue
-                  displayValue={
-                    col === ALL
-                      ? t('filters.all')
-                      : (colleges.find((c) => c.id === col)?.[
-                          locale === 'ar' ? 'name_ar' : 'name_en'
-                        ] ?? col)
-                  }
-                />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={ALL}>{t('filters.all')}</SelectItem>
