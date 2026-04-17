@@ -291,7 +291,8 @@
       "audit": "Audit log",
       "colleges": "Colleges & departments",
       "duplicates": "Duplicate publications",
-      "integrations": "Integrations"
+      "integrations": "Integrations",
+      "branding": "Branding & Logo"
     },
     "dashboard": {
       "title": "Admin Dashboard",

@@ -25,6 +25,8 @@ export async function Header() {
 
   let user: { email: string | null; avatarUrl: string | null } | null = null;
   let isAdmin = false;
+  let logoUrl = '';
+  let logoText = '';
 
   try {
     const supabase = await createClient();
@@ -41,6 +43,16 @@ export async function Header() {
         .maybeSingle();
       isAdmin = Boolean(adminRow);
     }
+    // Load branding from DB
+    const { data: brandingRows } = await supabase
+      .from('app_settings')
+      .select('key, value')
+      .in('key', ['branding.logo_url', 'branding.logo_text', 'branding.favicon_url']);
+    for (const row of brandingRows ?? []) {
+      const val = typeof row.value === 'string' ? row.value.replace(/^"|"$/g, '') : '';
+      if (row.key === 'branding.logo_url' && val) logoUrl = val;
+      if (row.key === 'branding.logo_text' && val) logoText = val;
+    }
   } catch {
     // Supabase not configured locally — render signed-out header.
   }
@@ -48,9 +60,20 @@ export async function Header() {
   return (
     <header className="bg-background/80 sticky top-0 z-40 w-full border-b backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
-        <Link href="/" className="text-base font-semibold tracking-tight whitespace-nowrap">
-          {tCommon('app_name')}
-          <span className="text-muted-foreground ms-2 hidden text-xs font-normal sm:inline">
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-base font-semibold tracking-tight whitespace-nowrap"
+        >
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt={logoText || tCommon('app_name')}
+              className="h-8 object-contain"
+            />
+          ) : (
+            logoText || tCommon('app_name')
+          )}
+          <span className="text-muted-foreground hidden text-xs font-normal sm:inline">
             {tCommon('university')}
           </span>
         </Link>

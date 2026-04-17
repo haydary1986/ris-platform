@@ -15,6 +15,7 @@ interface AdminLayoutProps {
 const NAV_KEYS = [
   'setup',
   'integrations',
+  'branding',
   'admins',
   'visibility',
   'settings',
