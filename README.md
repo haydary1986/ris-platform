@@ -1,7 +1,7 @@
 <p align="center">
   <h1 align="center">RIS — Researcher Information System</h1>
   <p align="center">
-    <strong>نظام معلومات الباحثين — جامعة الموصل</strong>
+    <strong>نظام معلومات الباحثين — جامعة التراث</strong>
   </p>
   <p align="center">
     A bilingual (EN/AR) research directory platform with publication tracking, analytics, and SEO-optimized researcher profiles.
@@ -215,5 +215,5 @@ See [SECURITY.md](SECURITY.md) for vulnerability reporting.
 ---
 
 <p align="center">
-  Built for the University of Mosul Research Community
+  Built for the University of AL-Turath Research Community
 </p>

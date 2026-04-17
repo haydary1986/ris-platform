@@ -2,7 +2,7 @@
   "common": {
     "app_name": "نظام الباحثين",
     "app_full_name": "نظام معلومات الباحثين",
-    "university": "جامعة الموصل",
+    "university": "جامعة التراث",
     "loading": "جارٍ التحميل…",
     "error": "حدث خطأ ما.",
     "save": "حفظ",
@@ -26,7 +26,7 @@
   },
   "landing": {
     "hero": {
-      "title": "نظام معلومات الباحثين — جامعة الموصل",
+      "title": "نظام معلومات الباحثين — جامعة التراث",
       "tagline": "استكشف أبحاث وإصدارات وتعاونات منتسبي الجامعة.",
       "cta_primary": "تصفح الباحثين",
       "cta_secondary": "اعرف المزيد"
@@ -94,15 +94,15 @@
     "contact": "تواصل",
     "privacy": "سياسة الخصوصية",
     "terms": "شروط الاستخدام",
-    "address": "جامعة الموصل، الموصل، العراق",
-    "copyright": "© {year} جامعة الموصل. جميع الحقوق محفوظة."
+    "address": "جامعة التراث، العراق",
+    "copyright": "© {year} جامعة التراث. جميع الحقوق محفوظة."
   },
   "auth": {
     "sign_in": {
       "title": "تسجيل الدخول",
-      "description": "استخدم حساب Google الخاص بجامعة الموصل.",
+      "description": "استخدم حساب Google الخاص بجامعة التراث.",
       "google": "المتابعة عبر Google",
-      "institutional_only": "يُسمح فقط بحسابات @uomosul.edu.iq.",
+      "institutional_only": "يُسمح فقط بحسابات @uoturath.edu.iq.",
       "error_generic": "تعذّر تسجيل دخولك. حاول مرة أخرى أو راجع المسؤول."
     }
   },
@@ -297,7 +297,7 @@
       "email": "البريد",
       "role": "الدور",
       "add": "إضافة مدير",
-      "add_email_placeholder": "user@uomosul.edu.iq",
+      "add_email_placeholder": "user@uoturath.edu.iq",
       "remove": "إزالة",
       "cannot_remove_self": "لا يمكنك إزالة نفسك.",
       "added": "تمت إضافة المدير.",

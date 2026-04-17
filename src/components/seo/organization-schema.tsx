@@ -9,14 +9,14 @@ export function OrganizationSchema() {
       data={{
         '@context': 'https://schema.org',
         '@type': 'CollegeOrUniversity',
-        name: 'University of Mosul',
-        alternateName: 'جامعة الموصل',
+        name: 'University of AL-Turath',
+        alternateName: 'جامعة التراث',
         url,
-        sameAs: ['https://en.wikipedia.org/wiki/University_of_Mosul', 'https://uomosul.edu.iq'],
+        sameAs: ['https://uoturath.edu.iq', 'https://uoturath.edu.iq'],
         address: {
           '@type': 'PostalAddress',
           addressCountry: 'IQ',
-          addressLocality: 'Mosul',
+          addressLocality: 'Baghdad',
         },
       }}
     />

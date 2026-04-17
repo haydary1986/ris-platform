@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: ResearcherPageProps): Promise
     name,
     titleStr,
     collegeStr ? `at ${collegeStr}` : null,
-    'University of Mosul.',
+    'University of AL-Turath.',
     publications.length > 0 ? `${publications.length} publications.` : null,
     profile.scopus_h_index !== null ? `h-index ${profile.scopus_h_index}.` : null,
   ]

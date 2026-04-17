@@ -33,12 +33,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
-    default: 'RIS — University of Mosul Researcher Directory',
+    default: 'RIS — University of AL-Turath Researcher Directory',
     template: '%s · RIS',
   },
-  description: 'Research Information System for the University of Mosul.',
+  description: 'Research Information System for the University of AL-Turath.',
   applicationName: 'RIS',
-  authors: [{ name: 'University of Mosul' }],
+  authors: [{ name: 'University of AL-Turath' }],
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,
   },

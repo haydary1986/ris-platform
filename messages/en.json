@@ -2,7 +2,7 @@
   "common": {
     "app_name": "RIS",
     "app_full_name": "Researcher Information System",
-    "university": "University of Mosul",
+    "university": "University of AL-Turath",
     "loading": "Loading…",
     "error": "Something went wrong.",
     "save": "Save",
@@ -26,7 +26,7 @@
   },
   "landing": {
     "hero": {
-      "title": "RIS — University of Mosul Researcher Directory",
+      "title": "RIS — University of AL-Turath Researcher Directory",
       "tagline": "Discover the research, publications, and collaborations of our scholars.",
       "cta_primary": "Explore researchers",
       "cta_secondary": "Learn more"
@@ -94,15 +94,15 @@
     "contact": "Contact",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "address": "University of Mosul, Mosul, Iraq",
-    "copyright": "© {year} University of Mosul. All rights reserved."
+    "address": "University of AL-Turath, Iraq",
+    "copyright": "© {year} University of AL-Turath. All rights reserved."
   },
   "auth": {
     "sign_in": {
       "title": "Sign in",
-      "description": "Use your University of Mosul Google account.",
+      "description": "Use your University of AL-Turath Google account.",
       "google": "Continue with Google",
-      "institutional_only": "Only @uomosul.edu.iq accounts may sign in.",
+      "institutional_only": "Only @uoturath.edu.iq accounts may sign in.",
       "error_generic": "We couldn't sign you in. Please try again or contact the admin."
     }
   },
@@ -297,7 +297,7 @@
       "email": "Email",
       "role": "Role",
       "add": "Add admin",
-      "add_email_placeholder": "user@uomosul.edu.iq",
+      "add_email_placeholder": "user@uoturath.edu.iq",
       "remove": "Remove",
       "cannot_remove_self": "Cannot remove yourself.",
       "added": "Admin added.",

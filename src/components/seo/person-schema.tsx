@@ -41,8 +41,8 @@ export function PersonSchema({
         affiliation: {
           '@type': 'CollegeOrUniversity',
           name: college
-            ? `${locale === 'ar' ? college.name_ar : college.name_en}, University of Mosul`
-            : 'University of Mosul',
+            ? `${locale === 'ar' ? college.name_ar : college.name_en}, University of AL-Turath`
+            : 'University of AL-Turath',
         },
         image: profile.profile_image ?? undefined,
         sameAs: sameAs.length > 0 ? sameAs : undefined,
