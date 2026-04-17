@@ -1,19 +1,10 @@
 'use client';
 
-import { useMemo, useRef, useEffect } from 'react';
-import { ArrowRight, BookOpen, Users, BarChart3, Globe2 } from 'lucide-react';
+import { useEffect, useRef, useMemo } from 'react';
+import { ArrowRight } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { buttonVariants } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
-
-const FLOATING_ICONS = [
-  { Icon: BookOpen, x: '10%', y: '20%', delay: 0, size: 32 },
-  { Icon: Users, x: '85%', y: '15%', delay: 0.5, size: 28 },
-  { Icon: BarChart3, x: '75%', y: '75%', delay: 1, size: 36 },
-  { Icon: Globe2, x: '15%', y: '70%', delay: 1.5, size: 30 },
-  { Icon: BookOpen, x: '50%', y: '85%', delay: 2, size: 24 },
-  { Icon: Users, x: '90%', y: '50%', delay: 0.8, size: 26 },
-];
 
 function seededRandom(seed: number): number {
   const x = Math.sin(seed) * 10000;
@@ -24,20 +15,224 @@ export function Hero() {
   const t = useTranslations('landing.hero');
   const tCommon = useTranslations('common');
   const locale = useLocale();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseRef = useRef({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLElement>(null);
 
-  const particles = useMemo(
+  const dots = useMemo(
     () =>
-      Array.from({ length: 20 }, (_, i) => ({
-        w: 2 + seededRandom(i * 7) * 4,
-        left: seededRandom(i * 13) * 100,
-        top: seededRandom(i * 19) * 100,
-        dur: 8 + seededRandom(i * 31) * 12,
-        dly: seededRandom(i * 37) * 5,
-        op: 0.1 + seededRandom(i * 43) * 0.3,
+      Array.from({ length: 80 }, (_, i) => ({
+        x: seededRandom(i * 7) * 100,
+        y: seededRandom(i * 13) * 100,
+        baseSize: 1.5 + seededRandom(i * 19) * 2,
+        speed: 0.1 + seededRandom(i * 31) * 0.3,
       })),
     [],
   );
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const section = sectionRef.current;
+    if (!canvas || !section) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animId: number;
+    let w = 0;
+    let h = 0;
+
+    function resize() {
+      w = section!.clientWidth;
+      h = section!.clientHeight;
+      canvas!.width = w * window.devicePixelRatio;
+      canvas!.height = h * window.devicePixelRatio;
+      canvas!.style.width = `${w}px`;
+      canvas!.style.height = `${h}px`;
+      ctx!.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+    }
+
+    function handleMouseMove(e: MouseEvent) {
+      const rect = section!.getBoundingClientRect();
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    section.addEventListener('mousemove', handleMouseMove);
+
+    // Globe parameters
+    let globeRotation = 0;
+    const globeCenterX = () => w * 0.78;
+    const globeCenterY = () => h * 0.5;
+    const globeRadius = () => Math.min(w, h) * 0.3;
+
+    // Globe points (lat/lng grid)
+    const globePoints: Array<{ lat: number; lng: number }> = [];
+    for (let lat = -80; lat <= 80; lat += 12) {
+      for (let lng = 0; lng < 360; lng += 12) {
+        globePoints.push({ lat: (lat * Math.PI) / 180, lng: (lng * Math.PI) / 180 });
+      }
+    }
+
+    function draw() {
+      ctx!.clearRect(0, 0, w, h);
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
+      const isDark = document.documentElement.classList.contains('dark');
+      const dotColor = isDark ? 'rgba(148, 163, 184,' : 'rgba(100, 116, 139,';
+      const lineColor = isDark ? 'rgba(148, 163, 184,' : 'rgba(100, 116, 139,';
+      const globeColor = isDark ? 'rgba(56, 189, 248,' : 'rgba(14, 165, 233,';
+
+      // === Interactive dots (Antigravity style) ===
+      for (const dot of dots) {
+        const dx = (dot.x / 100) * w;
+        const dy = (dot.y / 100) * h;
+        const distToMouse = Math.sqrt((dx - mx) ** 2 + (dy - my) ** 2);
+        const influence = Math.max(0, 1 - distToMouse / 180);
+        const size = dot.baseSize + influence * 4;
+        const alpha = 0.15 + influence * 0.6;
+
+        ctx!.beginPath();
+        ctx!.arc(dx, dy, size, 0, Math.PI * 2);
+        ctx!.fillStyle = `${dotColor}${alpha})`;
+        ctx!.fill();
+
+        // Connect nearby dots to mouse
+        if (distToMouse < 150) {
+          ctx!.beginPath();
+          ctx!.moveTo(dx, dy);
+          ctx!.lineTo(mx, my);
+          ctx!.strokeStyle = `${lineColor}${influence * 0.3})`;
+          ctx!.lineWidth = 0.5;
+          ctx!.stroke();
+        }
+      }
+
+      // Connect dots to each other if close
+      for (let i = 0; i < dots.length; i++) {
+        for (let j = i + 1; j < dots.length; j++) {
+          const ax = (dots[i]!.x / 100) * w;
+          const ay = (dots[i]!.y / 100) * h;
+          const bx = (dots[j]!.x / 100) * w;
+          const by = (dots[j]!.y / 100) * h;
+          const dist = Math.sqrt((ax - bx) ** 2 + (ay - by) ** 2);
+          if (dist < 120) {
+            ctx!.beginPath();
+            ctx!.moveTo(ax, ay);
+            ctx!.lineTo(bx, by);
+            ctx!.strokeStyle = `${lineColor}${0.06 * (1 - dist / 120)})`;
+            ctx!.lineWidth = 0.5;
+            ctx!.stroke();
+          }
+        }
+      }
+
+      // === Rotating Globe (Cloudflare style) ===
+      const cx = globeCenterX();
+      const cy = globeCenterY();
+      const r = globeRadius();
+      globeRotation += 0.003;
+
+      // Globe outline circle
+      ctx!.beginPath();
+      ctx!.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx!.strokeStyle = `${globeColor}0.1)`;
+      ctx!.lineWidth = 1;
+      ctx!.stroke();
+
+      // Globe glow
+      const glow = ctx!.createRadialGradient(cx, cy, r * 0.2, cx, cy, r * 1.2);
+      glow.addColorStop(0, `${globeColor}0.05)`);
+      glow.addColorStop(1, `${globeColor}0)`);
+      ctx!.fillStyle = glow;
+      ctx!.beginPath();
+      ctx!.arc(cx, cy, r * 1.2, 0, Math.PI * 2);
+      ctx!.fill();
+
+      // Globe dots
+      for (const p of globePoints) {
+        const rotatedLng = p.lng + globeRotation;
+        const x3d = Math.cos(p.lat) * Math.sin(rotatedLng);
+        const y3d = Math.sin(p.lat);
+        const z3d = Math.cos(p.lat) * Math.cos(rotatedLng);
+
+        if (z3d < -0.1) continue; // behind the globe
+
+        const px = cx + x3d * r;
+        const py = cy - y3d * r;
+        const alpha = 0.1 + z3d * 0.5;
+        const dotSize = 1 + z3d * 1.5;
+
+        ctx!.beginPath();
+        ctx!.arc(px, py, dotSize, 0, Math.PI * 2);
+        ctx!.fillStyle = `${globeColor}${Math.max(0.05, alpha)})`;
+        ctx!.fill();
+      }
+
+      // Globe latitude lines
+      for (let lat = -60; lat <= 60; lat += 30) {
+        const latRad = (lat * Math.PI) / 180;
+        ctx!.beginPath();
+        let started = false;
+        for (let lng = 0; lng <= 360; lng += 3) {
+          const lngRad = (lng * Math.PI) / 180 + globeRotation;
+          const x3d = Math.cos(latRad) * Math.sin(lngRad);
+          const y3d = Math.sin(latRad);
+          const z3d = Math.cos(latRad) * Math.cos(lngRad);
+          if (z3d < 0) {
+            started = false;
+            continue;
+          }
+          const px = cx + x3d * r;
+          const py = cy - y3d * r;
+          if (!started) {
+            ctx!.moveTo(px, py);
+            started = true;
+          } else ctx!.lineTo(px, py);
+        }
+        ctx!.strokeStyle = `${globeColor}0.08)`;
+        ctx!.lineWidth = 0.5;
+        ctx!.stroke();
+      }
+
+      // Globe longitude lines
+      for (let lng = 0; lng < 360; lng += 30) {
+        const lngRad = (lng * Math.PI) / 180 + globeRotation;
+        ctx!.beginPath();
+        let started = false;
+        for (let lat = -90; lat <= 90; lat += 3) {
+          const latRad = (lat * Math.PI) / 180;
+          const x3d = Math.cos(latRad) * Math.sin(lngRad);
+          const y3d = Math.sin(latRad);
+          const z3d = Math.cos(latRad) * Math.cos(lngRad);
+          if (z3d < 0) {
+            started = false;
+            continue;
+          }
+          const px = cx + x3d * r;
+          const py = cy - y3d * r;
+          if (!started) {
+            ctx!.moveTo(px, py);
+            started = true;
+          } else ctx!.lineTo(px, py);
+        }
+        ctx!.strokeStyle = `${globeColor}0.08)`;
+        ctx!.lineWidth = 0.5;
+        ctx!.stroke();
+      }
+
+      animId = requestAnimationFrame(draw);
+    }
+
+    animId = requestAnimationFrame(draw);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', resize);
+      section.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [dots]);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -47,95 +242,37 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="hero-section relative isolate overflow-hidden text-white"
-      style={{ minHeight: '85vh' }}
+      className="hero-section relative overflow-hidden bg-background"
+      style={{ minHeight: '90vh' }}
     >
-      {/* Animated gradient background */}
-      <div
-        className="absolute inset-0 animate-gradient-shift"
-        style={{
-          background:
-            'linear-gradient(-45deg, #0f172a, #1e40af, #0891b2, #0f766e, #1e40af, #0f172a)',
-          backgroundSize: '400% 400%',
-        }}
-      />
+      <canvas ref={canvasRef} className="absolute inset-0" />
 
-      {/* Grid pattern overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
-        }}
-      />
-
-      {/* Radial glow */}
-      <div
-        className="absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30 blur-[120px]"
-        style={{ background: 'radial-gradient(circle, rgba(56, 189, 248, 0.4), transparent 70%)' }}
-      />
-
-      {/* Floating animated icons */}
-      {FLOATING_ICONS.map(({ Icon, x, y, delay, size }, i) => (
-        <div
-          key={i}
-          className="hero-float-icon absolute opacity-0"
-          style={{
-            left: x,
-            top: y,
-            transitionDelay: `${delay}s`,
-            animation: `float-icon ${3 + i * 0.5}s ease-in-out infinite ${delay}s`,
-          }}
-        >
-          <Icon size={size} />
-        </div>
-      ))}
-
-      {/* Particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {particles.map((p, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full bg-white/20"
-            style={{
-              width: `${p.w}px`,
-              height: `${p.w}px`,
-              left: `${p.left}%`,
-              top: `${p.top}%`,
-              animation: `particle-rise ${p.dur}s linear infinite ${p.dly}s`,
-              opacity: p.op,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 py-24 sm:py-32 lg:py-40">
-        <div className="mx-auto max-w-4xl text-center">
+      <div className="relative z-10 container mx-auto flex min-h-[90vh] items-center px-4 py-24">
+        <div className="max-w-2xl">
           {/* Badge */}
-          <div className="hero-fade-up inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium backdrop-blur-sm">
+          <div className="hero-fade-up inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-xs font-medium backdrop-blur-sm">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
             </span>
             {tCommon('university')}
           </div>
 
           {/* Title */}
           <h1
-            className="hero-fade-up mt-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
+            className="hero-fade-up mt-6 text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
             style={{ transitionDelay: '0.2s' }}
           >
-            <span className="block">{t('title').split('—')[0]}—</span>
-            <span className="bg-gradient-to-r from-cyan-200 via-white to-cyan-200 bg-clip-text text-transparent">
+            {t('title').split('—')[0]}
+            <span className="bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-500 bg-clip-text text-transparent">
+              {'—'}
               {t('title').split('—')[1] ?? ''}
             </span>
           </h1>
 
           {/* Tagline */}
           <p
-            className="hero-fade-up mx-auto mt-6 max-w-2xl text-lg text-white/80 sm:text-xl"
+            className="hero-fade-up mt-6 max-w-xl text-lg text-muted-foreground sm:text-xl"
             style={{ transitionDelay: '0.4s' }}
           >
             {t('tagline')}
@@ -143,16 +280,15 @@ export function Hero() {
 
           {/* CTAs */}
           <div
-            className="hero-fade-up mt-10 flex flex-wrap items-center justify-center gap-4"
+            className="hero-fade-up mt-10 flex flex-wrap items-center gap-4"
             style={{ transitionDelay: '0.5s' }}
           >
             <Link
               href="/researchers"
               className={buttonVariants({
-                variant: 'secondary',
                 size: 'lg',
                 className:
-                  'group px-8 py-6 text-base shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/30',
+                  'group px-8 py-6 text-base shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl',
               })}
             >
               {t('cta_primary')}
@@ -163,41 +299,13 @@ export function Hero() {
               className={buttonVariants({
                 variant: 'outline',
                 size: 'lg',
-                className:
-                  'px-8 py-6 text-base border-white/30 bg-white/5 text-white backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/15',
+                className: 'px-8 py-6 text-base transition-all duration-300 hover:-translate-y-0.5',
               })}
             >
               {t('cta_secondary')}
             </Link>
           </div>
-
-          {/* Stats mini */}
-          <div
-            className="hero-fade-up mt-16 flex items-center justify-center gap-8 sm:gap-16"
-            style={{ transitionDelay: '0.7s' }}
-          >
-            {[
-              { icon: Users, label: locale === 'ar' ? 'باحث' : 'Researchers' },
-              { icon: BookOpen, label: locale === 'ar' ? 'منشور' : 'Publications' },
-              { icon: BarChart3, label: locale === 'ar' ? 'كلية' : 'Colleges' },
-            ].map(({ icon: Ic, label }, i) => (
-              <div key={i} className="flex items-center gap-2 text-white/60">
-                <Ic className="size-4" />
-                <span className="text-sm">{label}</span>
-              </div>
-            ))}
-          </div>
         </div>
-      </div>
-
-      {/* Bottom wave */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 100" fill="none" className="h-16 w-full sm:h-24">
-          <path
-            d="M0,60 C360,100 720,20 1080,60 C1260,80 1380,40 1440,60 L1440,100 L0,100 Z"
-            className="fill-background"
-          />
-        </svg>
       </div>
     </section>
   );
