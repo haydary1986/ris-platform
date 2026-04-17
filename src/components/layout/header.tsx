@@ -9,13 +9,15 @@ import { UserMenu } from './user-menu';
 import { createClient } from '@/lib/supabase/server';
 
 interface NavLink {
-  href: '/' | '/researchers' | '/analytics';
-  key: 'home' | 'researchers' | 'analytics';
+  href: '/' | '/researchers' | '/publications' | '/leaderboard' | '/analytics';
+  key: 'home' | 'researchers' | 'publications' | 'leaderboard' | 'analytics';
 }
 
 const NAV_LINKS: NavLink[] = [
   { href: '/', key: 'home' },
   { href: '/researchers', key: 'researchers' },
+  { href: '/publications', key: 'publications' },
+  { href: '/leaderboard', key: 'leaderboard' },
   { href: '/analytics', key: 'analytics' },
 ];
 

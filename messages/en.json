@@ -17,6 +17,8 @@
   "navigation": {
     "home": "Home",
     "researchers": "Researchers",
+    "publications": "Publications",
+    "leaderboard": "Leaderboard",
     "analytics": "Analytics",
     "about": "About",
     "sign_in": "Sign in",
