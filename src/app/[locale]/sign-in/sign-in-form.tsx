@@ -52,7 +52,17 @@ export function SignInForm({ next, error }: SignInFormProps) {
           <Info className="mt-0.5 size-4 shrink-0 text-blue-600 dark:text-blue-400" />
           <p className="text-sm text-blue-800 dark:text-blue-300">{t('institutional_only')}</p>
         </div>
-        {error ? (
+        {error === 'unauthorized_domain' ? (
+          <div
+            className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-900 dark:bg-red-950/50"
+            role="alert"
+          >
+            <Info className="mt-0.5 size-4 shrink-0 text-red-600 dark:text-red-400" />
+            <p className="text-sm text-red-800 dark:text-red-300">
+              {t('error_unauthorized_domain')}
+            </p>
+          </div>
+        ) : error ? (
           <p className="text-destructive text-sm" role="alert">
             {t('error_generic')}
           </p>

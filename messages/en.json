@@ -105,7 +105,8 @@
       "description": "Use your AL-Turath University Google account.",
       "google": "Continue with Google",
       "institutional_only": "Only @uoturath.edu.iq accounts may sign in.",
-      "error_generic": "We couldn't sign you in. Please try again or contact the admin."
+      "error_generic": "We couldn't sign you in. Please try again or contact the admin.",
+      "error_unauthorized_domain": "Access denied — only @uoturath.edu.iq email addresses are allowed. Your login attempt has been logged."
     }
   },
   "profile": {

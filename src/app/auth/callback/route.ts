@@ -3,8 +3,10 @@ import { createClient } from '@/lib/supabase/server';
 import { routing } from '@/i18n/routing';
 import { autoImportForUser, autoImportFromOrcid } from '@/lib/import/auto-import';
 import { checkProfileComplete } from '@/lib/profile/is-complete';
+import { logError, logWarn } from '@/lib/logger';
 
 const SAFE_NEXT = /^\/(en|ar)\/[a-zA-Z0-9_\-/]*$/;
+const ALLOWED_DOMAIN = 'uoturath.edu.iq';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -35,6 +37,24 @@ export async function GET(request: Request) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  // Block non-institutional emails
+  const emailDomain = (user?.email ?? '').split('@')[1]?.toLowerCase() ?? '';
+  if (emailDomain !== ALLOWED_DOMAIN) {
+    await logWarn('auth.callback', `Blocked login attempt from non-institutional email`, {
+      email: user?.email ?? 'unknown',
+      domain: emailDomain,
+      userId: user?.id,
+      provider: user?.app_metadata?.provider ?? 'unknown',
+    }).catch(() => {});
+
+    // Sign out the unauthorized user
+    await supabase.auth.signOut();
+
+    return NextResponse.redirect(
+      new URL(`/${defaultLocale}/sign-in?error=unauthorized_domain`, origin),
+    );
+  }
 
   if (user?.email) {
     Promise.all([

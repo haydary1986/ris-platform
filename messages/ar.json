@@ -105,7 +105,8 @@
       "description": "استخدم حساب Google الخاص بجامعة التراث.",
       "google": "المتابعة عبر Google",
       "institutional_only": "يُسمح فقط بحسابات @uoturath.edu.iq.",
-      "error_generic": "تعذّر تسجيل دخولك. حاول مرة أخرى أو راجع المسؤول."
+      "error_generic": "تعذّر تسجيل دخولك. حاول مرة أخرى أو راجع المسؤول.",
+      "error_unauthorized_domain": "تم رفض الدخول — يُسمح فقط لعناوين البريد @uoturath.edu.iq. تم تسجيل محاولة الدخول."
     }
   },
   "profile": {
