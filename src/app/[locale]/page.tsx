@@ -5,6 +5,7 @@ import { Stats } from '@/components/landing/stats';
 import { FeaturedResearchers } from '@/components/landing/featured-researchers';
 import { Mission } from '@/components/landing/mission';
 import { SdgGrid } from '@/components/landing/sdg-grid';
+import { InstitutionStats } from '@/components/landing/institution-stats';
 import { OrganizationSchema } from '@/components/seo/organization-schema';
 import { hasLocale } from 'next-intl';
 import { routing, type Locale } from '@/i18n/routing';
@@ -56,6 +57,7 @@ export default async function HomePage({ params }: HomePageProps) {
     <>
       <OrganizationSchema />
       <Hero />
+      <InstitutionStats locale={locale} />
       <Stats locale={typedLocale} />
       <FeaturedResearchers locale={typedLocale} />
       <Mission />
