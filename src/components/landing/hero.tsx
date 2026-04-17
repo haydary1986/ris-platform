@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { buttonVariants } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
+import { CONTINENTS, IRAQ } from './globe-data';
 
 function seededRandom(seed: number): number {
   const x = Math.sin(seed) * 10000;
@@ -68,13 +69,18 @@ export function Hero() {
     const globeCenterY = () => h * 0.5;
     const globeRadius = () => Math.min(w, h) * 0.3;
 
-    // Globe points (lat/lng grid)
-    const globePoints: Array<{ lat: number; lng: number }> = [];
-    for (let lat = -80; lat <= 80; lat += 12) {
-      for (let lng = 0; lng < 360; lng += 12) {
-        globePoints.push({ lat: (lat * Math.PI) / 180, lng: (lng * Math.PI) / 180 });
-      }
-    }
+    // Convert degree coords to radians for continents
+    const continentPaths = CONTINENTS.map((c) => ({
+      name: c.name,
+      points: c.points.map(([lat, lng]) => ({
+        lat: (lat * Math.PI) / 180,
+        lng: (lng * Math.PI) / 180,
+      })),
+    }));
+    const iraqPath = IRAQ.map(([lat, lng]) => ({
+      lat: (lat * Math.PI) / 180,
+      lng: (lng * Math.PI) / 180,
+    }));
 
     function draw() {
       ctx!.clearRect(0, 0, w, h);
@@ -151,76 +157,122 @@ export function Hero() {
       ctx!.arc(cx, cy, r * 1.2, 0, Math.PI * 2);
       ctx!.fill();
 
-      // Globe dots
-      for (const p of globePoints) {
-        const rotatedLng = p.lng + globeRotation;
-        const x3d = Math.cos(p.lat) * Math.sin(rotatedLng);
-        const y3d = Math.sin(p.lat);
-        const z3d = Math.cos(p.lat) * Math.cos(rotatedLng);
-
-        if (z3d < -0.1) continue; // behind the globe
-
-        const px = cx + x3d * r;
-        const py = cy - y3d * r;
-        const alpha = 0.1 + z3d * 0.5;
-        const dotSize = 1 + z3d * 1.5;
-
-        ctx!.beginPath();
-        ctx!.arc(px, py, dotSize, 0, Math.PI * 2);
-        ctx!.fillStyle = `${globeColor}${Math.max(0.05, alpha)})`;
-        ctx!.fill();
-      }
-
-      // Globe latitude lines
+      // Subtle grid lines (latitude)
       for (let lat = -60; lat <= 60; lat += 30) {
         const latRad = (lat * Math.PI) / 180;
         ctx!.beginPath();
         let started = false;
-        for (let lng = 0; lng <= 360; lng += 3) {
+        for (let lng = 0; lng <= 360; lng += 4) {
           const lngRad = (lng * Math.PI) / 180 + globeRotation;
-          const x3d = Math.cos(latRad) * Math.sin(lngRad);
-          const y3d = Math.sin(latRad);
           const z3d = Math.cos(latRad) * Math.cos(lngRad);
           if (z3d < 0) {
             started = false;
             continue;
           }
-          const px = cx + x3d * r;
-          const py = cy - y3d * r;
+          const px = cx + Math.cos(latRad) * Math.sin(lngRad) * r;
+          const py = cy - Math.sin(latRad) * r;
           if (!started) {
             ctx!.moveTo(px, py);
             started = true;
           } else ctx!.lineTo(px, py);
         }
-        ctx!.strokeStyle = `${globeColor}0.08)`;
+        ctx!.strokeStyle = `${globeColor}0.06)`;
         ctx!.lineWidth = 0.5;
         ctx!.stroke();
       }
 
-      // Globe longitude lines
-      for (let lng = 0; lng < 360; lng += 30) {
-        const lngRad = (lng * Math.PI) / 180 + globeRotation;
+      // Continent filled shapes
+      for (const continent of continentPaths) {
         ctx!.beginPath();
-        let started = false;
-        for (let lat = -90; lat <= 90; lat += 3) {
-          const latRad = (lat * Math.PI) / 180;
-          const x3d = Math.cos(latRad) * Math.sin(lngRad);
-          const y3d = Math.sin(latRad);
-          const z3d = Math.cos(latRad) * Math.cos(lngRad);
-          if (z3d < 0) {
-            started = false;
-            continue;
-          }
-          const px = cx + x3d * r;
-          const py = cy - y3d * r;
-          if (!started) {
+        let first = true;
+        let allBehind = true;
+        for (const p of continent.points) {
+          const rl = p.lng + globeRotation;
+          const z3d = Math.cos(p.lat) * Math.cos(rl);
+          if (z3d < -0.05) continue;
+          allBehind = false;
+          const px = cx + Math.cos(p.lat) * Math.sin(rl) * r;
+          const py = cy - Math.sin(p.lat) * r;
+          if (first) {
             ctx!.moveTo(px, py);
-            started = true;
+            first = false;
           } else ctx!.lineTo(px, py);
         }
-        ctx!.strokeStyle = `${globeColor}0.08)`;
-        ctx!.lineWidth = 0.5;
+        if (!allBehind) {
+          ctx!.closePath();
+          ctx!.fillStyle = `${globeColor}0.18)`;
+          ctx!.fill();
+          ctx!.strokeStyle = `${globeColor}0.3)`;
+          ctx!.lineWidth = 0.8;
+          ctx!.stroke();
+        }
+      }
+
+      // Iraq — bright glow
+      const iraqScreenPoints: Array<{ x: number; y: number; z: number }> = [];
+      for (const p of iraqPath) {
+        const rl = p.lng + globeRotation;
+        const z3d = Math.cos(p.lat) * Math.cos(rl);
+        iraqScreenPoints.push({
+          x: cx + Math.cos(p.lat) * Math.sin(rl) * r,
+          y: cy - Math.sin(p.lat) * r,
+          z: z3d,
+        });
+      }
+      const iraqVisible = iraqScreenPoints.some((p) => p.z > 0);
+      if (iraqVisible) {
+        // Glow effect
+        const iraqCenterX = iraqScreenPoints.reduce((s, p) => s + p.x, 0) / iraqScreenPoints.length;
+        const iraqCenterY = iraqScreenPoints.reduce((s, p) => s + p.y, 0) / iraqScreenPoints.length;
+        const glowR = ctx!.createRadialGradient(
+          iraqCenterX,
+          iraqCenterY,
+          0,
+          iraqCenterX,
+          iraqCenterY,
+          r * 0.15,
+        );
+        glowR.addColorStop(0, isDark ? 'rgba(250, 204, 21, 0.4)' : 'rgba(234, 179, 8, 0.35)');
+        glowR.addColorStop(1, isDark ? 'rgba(250, 204, 21, 0)' : 'rgba(234, 179, 8, 0)');
+        ctx!.fillStyle = glowR;
+        ctx!.beginPath();
+        ctx!.arc(iraqCenterX, iraqCenterY, r * 0.15, 0, Math.PI * 2);
+        ctx!.fill();
+
+        // Iraq shape
+        ctx!.beginPath();
+        let iraqFirst = true;
+        for (const p of iraqScreenPoints) {
+          if (p.z < -0.05) continue;
+          if (iraqFirst) {
+            ctx!.moveTo(p.x, p.y);
+            iraqFirst = false;
+          } else ctx!.lineTo(p.x, p.y);
+        }
+        ctx!.closePath();
+        ctx!.fillStyle = isDark ? 'rgba(250, 204, 21, 0.7)' : 'rgba(234, 179, 8, 0.6)';
+        ctx!.fill();
+        ctx!.strokeStyle = isDark ? 'rgba(250, 204, 21, 0.9)' : 'rgba(234, 179, 8, 0.8)';
+        ctx!.lineWidth = 1.5;
         ctx!.stroke();
+
+        // Pulsing dot on Baghdad
+        const baghdadLat = (33.3 * Math.PI) / 180;
+        const baghdadLng = (44.4 * Math.PI) / 180 + globeRotation;
+        const bz = Math.cos(baghdadLat) * Math.cos(baghdadLng);
+        if (bz > 0) {
+          const bx = cx + Math.cos(baghdadLat) * Math.sin(baghdadLng) * r;
+          const by = cy - Math.sin(baghdadLat) * r;
+          const pulse = 2 + Math.sin(Date.now() / 300) * 1.5;
+          ctx!.beginPath();
+          ctx!.arc(bx, by, pulse + 3, 0, Math.PI * 2);
+          ctx!.fillStyle = isDark ? 'rgba(250, 204, 21, 0.2)' : 'rgba(234, 179, 8, 0.15)';
+          ctx!.fill();
+          ctx!.beginPath();
+          ctx!.arc(bx, by, pulse, 0, Math.PI * 2);
+          ctx!.fillStyle = isDark ? 'rgba(250, 204, 21, 0.9)' : 'rgba(234, 179, 8, 0.8)';
+          ctx!.fill();
+        }
       }
 
       animId = requestAnimationFrame(draw);
