@@ -6,6 +6,7 @@ import { FeaturedResearchers } from '@/components/landing/featured-researchers';
 import { Mission } from '@/components/landing/mission';
 import { SdgGrid } from '@/components/landing/sdg-grid';
 import { InstitutionStats } from '@/components/landing/institution-stats';
+import { DataSources } from '@/components/landing/data-sources';
 import { OrganizationSchema } from '@/components/seo/organization-schema';
 import { hasLocale } from 'next-intl';
 import { routing, type Locale } from '@/i18n/routing';
@@ -62,6 +63,7 @@ export default async function HomePage({ params }: HomePageProps) {
       <FeaturedResearchers locale={typedLocale} />
       <Mission />
       <SdgGrid locale={typedLocale} />
+      <DataSources locale={locale} />
     </>
   );
 }
