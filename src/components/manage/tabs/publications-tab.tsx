@@ -1,7 +1,25 @@
 'use client';
 
 import { useRef, useState, useTransition } from 'react';
-import { Plus, Trash, Download, FileUp, Upload, Loader2 } from 'lucide-react';
+import {
+  Plus,
+  Trash,
+  Download,
+  FileUp,
+  Upload,
+  Loader2,
+  FolderOpen,
+  FolderArchive,
+  ArrowRight,
+  Globe,
+  Copy,
+  ToggleRight,
+  Puzzle,
+  CheckCircle,
+  ExternalLink,
+  ChevronRight,
+  ChevronLeft,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
@@ -299,10 +317,11 @@ function ScholarQuickImport() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
   const [showGuide, setShowGuide] = useState(false);
+  const [showExtGuide, setShowExtGuide] = useState(false);
+  const [extStep, setExtStep] = useState(0);
 
   const siteUrl = typeof window !== 'undefined' ? window.location.origin : '';
 
-  // Bookmarklet code — scrapes Scholar + auto-submits to our API
   const bookmarkletCode = `javascript:void(function(){if(!location.host.includes('scholar.google.com')){alert('Open your Google Scholar profile first!');return;}var p=[];document.querySelectorAll('#gsc_a_b .gsc_a_tr').forEach(function(r){var t=r.querySelector('.gsc_a_at');var g=r.querySelectorAll('.gs_gray');var y=r.querySelector('.gsc_a_h');var c=r.querySelector('.gsc_a_ac');if(!t)return;p.push({title:t.textContent.trim(),authors:(g[0]?g[0].textContent:'').split(',').map(function(s){return s.trim()}).filter(Boolean),journal_name:g[1]?g[1].textContent.trim():null,publication_year:y&&/^[0-9]{4}$/.test(y.textContent)?Number(y.textContent):null,scholar_citations:c&&/^[0-9]+$/.test(c.textContent.trim())?Number(c.textContent):0})});if(p.length===0){alert('No publications found. Make sure you are on your Scholar profile and publications are visible.');return;}var d={version:1,provider:'scholar',publications:p};var e=btoa(unescape(encodeURIComponent(JSON.stringify(d))));var f=document.createElement('form');f.method='POST';f.action='${siteUrl}/api/import/scholar-auto';var i=document.createElement('input');i.type='hidden';i.name='data';i.value=e;f.appendChild(i);document.body.appendChild(f);f.submit();}())`;
 
   function uploadFile(file: File) {
@@ -323,6 +342,124 @@ function ScholarQuickImport() {
     });
   }
 
+  const extSteps = [
+    {
+      icon: <Download className="size-6" />,
+      titleEn: 'Download the extension',
+      titleAr: 'حمّل الإضافة',
+      descEn: 'Click the button below to download the extension file.',
+      descAr: 'اضغط الزر أدناه لتحميل ملف الإضافة.',
+      visual: (
+        <a
+          href="/extension/ris-scholar-importer.zip"
+          download
+          className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow hover:bg-primary/90"
+          onClick={() => setTimeout(() => setExtStep(1), 500)}
+        >
+          <Download className="size-4" />
+          Download .zip
+        </a>
+      ),
+    },
+    {
+      icon: <FolderOpen className="size-6" />,
+      titleEn: 'Extract the ZIP file',
+      titleAr: 'فك ضغط الملف',
+      descEn: 'Right-click the downloaded file and choose "Extract All" or double-click it.',
+      descAr: 'انقر بزر الماوس الأيمن على الملف واختر "استخراج الكل" أو انقر عليه مرتين.',
+      visual: (
+        <div className="flex items-center gap-3 rounded-lg border bg-muted/50 px-4 py-3">
+          <div className="flex size-10 items-center justify-center rounded bg-yellow-500/20">
+            <FolderArchive className="size-5 text-yellow-600" />
+          </div>
+          <ArrowRight className="size-4 text-muted-foreground" />
+          <div className="flex size-10 items-center justify-center rounded bg-blue-500/20">
+            <FolderOpen className="size-5 text-blue-600" />
+          </div>
+        </div>
+      ),
+    },
+    {
+      icon: <Globe className="size-6" />,
+      titleEn: 'Open Extensions page',
+      titleAr: 'افتح صفحة الإضافات',
+      descEn: "Type this address in Chrome's address bar:",
+      descAr: 'اكتب هذا العنوان في شريط العنوان:',
+      visual: (
+        <button
+          type="button"
+          onClick={() => {
+            navigator.clipboard.writeText('chrome://extensions');
+            toast.success('Copied!');
+          }}
+          className="group flex w-full items-center gap-2 rounded-lg border-2 border-dashed border-primary/40 bg-muted/50 px-4 py-3 text-start transition hover:border-primary/60 hover:bg-muted"
+        >
+          <div className="flex-1 font-mono text-sm font-bold text-primary">chrome://extensions</div>
+          <Copy className="size-4 text-muted-foreground transition group-hover:text-primary" />
+        </button>
+      ),
+    },
+    {
+      icon: <ToggleRight className="size-6" />,
+      titleEn: 'Enable Developer Mode',
+      titleAr: 'فعّل وضع المطور',
+      descEn: 'Find the toggle in the top-right corner and turn it ON.',
+      descAr: 'ابحث عن زر التبديل في الزاوية العلوية وقم بتشغيله.',
+      visual: (
+        <div className="flex items-center justify-between rounded-lg border bg-muted/50 px-4 py-3">
+          <span className="text-sm font-medium">Developer mode</span>
+          <div className="flex h-6 w-11 items-center rounded-full bg-primary px-0.5">
+            <div className="size-5 rounded-full bg-white shadow-sm translate-x-5" />
+          </div>
+        </div>
+      ),
+    },
+    {
+      icon: <Puzzle className="size-6" />,
+      titleEn: 'Load unpacked extension',
+      titleAr: 'تحميل الإضافة',
+      descEn: 'Click "Load unpacked" and select the extracted folder.',
+      descAr: 'اضغط "Load unpacked" واختر المجلد المستخرج.',
+      visual: (
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            {['Load unpacked', 'Pack extension', 'Update'].map((btn) => (
+              <span
+                key={btn}
+                className={`rounded border px-3 py-1.5 text-xs font-medium ${btn === 'Load unpacked' ? 'border-primary bg-primary/10 text-primary ring-2 ring-primary/30' : 'border-muted-foreground/30 text-muted-foreground'}`}
+              >
+                {btn}
+              </span>
+            ))}
+          </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <ArrowRight className="size-3" />
+            Select the extracted folder
+          </div>
+        </div>
+      ),
+    },
+    {
+      icon: <CheckCircle className="size-6 text-green-500" />,
+      titleEn: 'Done! Open Google Scholar',
+      titleAr: 'تم! افتح Google Scholar',
+      descEn:
+        "Go to your Scholar profile — you'll see the import button. Click it and you're done!",
+      descAr: 'اذهب إلى ملفك في Scholar — ستجد زر الاستيراد. اضغط عليه وانتهى!',
+      visual: (
+        <a
+          href="https://scholar.google.com/citations"
+          target="_blank"
+          rel="noopener"
+          className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-green-700"
+        >
+          <ExternalLink className="size-4" />
+          Open Google Scholar
+        </a>
+      ),
+    },
+  ];
+
   return (
     <>
       <input
@@ -342,6 +479,7 @@ function ScholarQuickImport() {
         Google Scholar
       </Button>
 
+      {/* Main import method chooser */}
       <Dialog open={showGuide} onOpenChange={setShowGuide}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
@@ -372,7 +510,7 @@ function ScholarQuickImport() {
                   draggable="true"
                 >
                   <Upload className="size-4" />
-                  📚 Import to RIS
+                  Import to RIS
                 </a>
               </div>
               <ol className="list-decimal ms-5 space-y-2 text-muted-foreground" start={2}>
@@ -391,41 +529,137 @@ function ScholarQuickImport() {
                   Click <strong>&quot;Show more&quot;</strong> until all publications visible
                 </li>
                 <li>
-                  Click the <strong>&quot;📚 Import to RIS&quot;</strong> bookmark
+                  Click the <strong>&quot;Import to RIS&quot;</strong> bookmark
                 </li>
-                <li>Done! Publications import automatically ✅</li>
               </ol>
             </div>
 
-            {/* Method 2: File upload fallback */}
-            <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
-              <p className="font-semibold text-muted-foreground">Alternative: Upload file</p>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  setShowGuide(false);
-                  fileRef.current?.click();
-                }}
-                disabled={isPending}
-                className="w-full"
-              >
+            {/* Method 2: Chrome Extension */}
+            <button
+              type="button"
+              onClick={() => {
+                setShowGuide(false);
+                setExtStep(0);
+                setShowExtGuide(true);
+              }}
+              className="flex w-full items-center gap-3 rounded-lg border bg-muted/30 p-4 text-start transition hover:bg-muted/60"
+            >
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted">
+                <Puzzle className="size-5 text-muted-foreground" />
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold">Chrome Extension</p>
+                <p className="text-xs text-muted-foreground">
+                  Install once, import with one click from Scholar
+                </p>
+              </div>
+              <ChevronRight className="size-4 text-muted-foreground" />
+            </button>
+
+            {/* Method 3: File upload */}
+            <button
+              type="button"
+              onClick={() => {
+                setShowGuide(false);
+                fileRef.current?.click();
+              }}
+              disabled={isPending}
+              className="flex w-full items-center gap-3 rounded-lg border bg-muted/30 p-4 text-start transition hover:bg-muted/60 disabled:opacity-50"
+            >
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted">
                 {isPending ? (
-                  <Loader2 className="size-4 animate-spin" />
+                  <Loader2 className="size-5 animate-spin text-muted-foreground" />
                 ) : (
-                  <FileUp className="size-4" />
+                  <FileUp className="size-5 text-muted-foreground" />
                 )}
-                Upload .mrhenc file
-              </Button>
-              <a
-                href="/extension/ris-scholar-importer.zip"
-                download
-                className="text-primary text-xs inline-flex items-center gap-1 hover:underline"
-              >
-                <Download className="size-3" /> Install Chrome extension
-              </a>
-            </div>
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold">Upload .mrhenc file</p>
+                <p className="text-xs text-muted-foreground">Exported file from the extension</p>
+              </div>
+              <ChevronRight className="size-4 text-muted-foreground" />
+            </button>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Extension installation guide — step by step */}
+      <Dialog
+        open={showExtGuide}
+        onOpenChange={(v) => {
+          setShowExtGuide(v);
+          if (!v) setExtStep(0);
+        }}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Puzzle className="size-5" />
+              Install Extension
+              <span className="ms-auto text-xs font-normal text-muted-foreground">
+                {extStep + 1} / {extSteps.length}
+              </span>
+            </DialogTitle>
+          </DialogHeader>
+
+          {/* Progress bar */}
+          <div className="flex gap-1">
+            {extSteps.map((_, i) => (
+              <div
+                key={i}
+                className={`h-1 flex-1 rounded-full transition-colors ${i <= extStep ? 'bg-primary' : 'bg-muted'}`}
+              />
+            ))}
+          </div>
+
+          {/* Current step */}
+          {(() => {
+            const step = extSteps[extStep]!;
+            return (
+              <div className="space-y-4 py-2">
+                <div className="flex items-center gap-3">
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    {step.icon}
+                  </div>
+                  <div>
+                    <p className="font-semibold">{step.titleEn}</p>
+                    <p className="text-xs text-muted-foreground">{step.titleAr}</p>
+                  </div>
+                </div>
+
+                <p className="text-sm text-muted-foreground">{step.descEn}</p>
+                <p className="text-sm text-muted-foreground" dir="rtl">
+                  {step.descAr}
+                </p>
+
+                <div className="flex justify-center py-2">{step.visual}</div>
+              </div>
+            );
+          })()}
+
+          <DialogFooter className="flex-row gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setExtStep((s) => Math.max(0, s - 1))}
+              disabled={extStep === 0}
+              className="flex-1"
+            >
+              <ChevronLeft className="size-4" />
+              Back
+            </Button>
+            {extStep < extSteps.length - 1 ? (
+              <Button size="sm" onClick={() => setExtStep((s) => s + 1)} className="flex-1">
+                Next
+                <ChevronRight className="size-4" />
+              </Button>
+            ) : (
+              <Button size="sm" onClick={() => setShowExtGuide(false)} className="flex-1">
+                <CheckCircle className="size-4" />
+                Done
+              </Button>
+            )}
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
