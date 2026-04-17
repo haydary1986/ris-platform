@@ -63,7 +63,8 @@ export function Hero() {
 
     // Globe parameters
     let globeRotation = 0;
-    const globeCenterX = () => w * 0.78;
+    const isRtl = document.documentElement.dir === 'rtl';
+    const globeCenterX = () => (isRtl ? w * 0.22 : w * 0.78);
     const globeCenterY = () => h * 0.5;
     const globeRadius = () => Math.min(w, h) * 0.3;
 
@@ -248,7 +249,7 @@ export function Hero() {
       <canvas ref={canvasRef} className="absolute inset-0" />
 
       <div className="relative z-10 container mx-auto flex min-h-[90vh] items-center px-4 py-24">
-        <div className="max-w-2xl">
+        <div className="max-w-2xl ltr:mr-auto rtl:ml-auto">
           {/* Badge */}
           <div className="hero-fade-up inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-xs font-medium backdrop-blur-sm">
             <span className="relative flex h-2 w-2">
