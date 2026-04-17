@@ -1,6 +1,3 @@
-# Task 182 — Multi-stage Dockerfile for Next.js standalone output.
-# Designed for Coolify deployment (Task 196).
-
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -11,15 +8,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# NEXT_PUBLIC_ vars must be available at build time (baked into JS bundle)
-ARG NEXT_PUBLIC_SUPABASE_URL
-ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
-ARG NEXT_PUBLIC_SITE_URL
-ARG NEXT_PUBLIC_SENTRY_DSN
-ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
-ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
-ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
-ENV NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN
+ENV NEXT_PUBLIC_SUPABASE_URL=https://api-ris.uoturath.edu.iq
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc3NjM4OTg4MCwiZXhwIjo0OTMyMDYzNDgwLCJyb2xlIjoiYW5vbiJ9.2hrE9SyjjqktVCmVitmR0w37uRln1kmdrkfVhX7qrak
+ENV NEXT_PUBLIC_SITE_URL=https://ris.uoturath.edu.iq
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build
