@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 export interface ActionResult {
   ok: boolean;
@@ -14,35 +15,62 @@ async function requireAdmin(): Promise<string | null> {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return null;
-  const { data } = await supabase.from('admins').select('id').eq('user_id', user.id).maybeSingle();
+  const { data } = await supabase
+    .from('admins')
+    .select('id, role')
+    .eq('user_id', user.id)
+    .maybeSingle();
   return data ? user.id : null;
 }
 
-export async function addAdmin(email: string): Promise<ActionResult> {
-  const adminUserId = await requireAdmin();
-  if (!adminUserId) return { ok: false, error: 'forbidden' };
-
+async function requireSuperAdmin(): Promise<string | null> {
   const supabase = await createClient();
-  const { data: target } = await supabase
-    .from('researchers')
-    .select('user_id')
-    .ilike('private_email', email)
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+  const { data } = await supabase
+    .from('admins')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('role', 'super_admin')
     .maybeSingle();
-  if (!target?.user_id) return { ok: false, error: 'user_not_found' };
+  return data ? user.id : null;
+}
 
-  const { error } = await supabase.from('admins').insert({
-    user_id: target.user_id,
-    role: 'super_admin',
-    created_by: adminUserId,
-  });
-  if (error) return { ok: false, error: error.message };
+export async function addAdmin(
+  email: string,
+  role: 'super_admin' | 'college_admin' | 'department_admin' = 'super_admin',
+  scopeId?: string,
+): Promise<ActionResult> {
+  const adminUserId = await requireSuperAdmin();
+  if (!adminUserId) return { ok: false, error: 'forbidden — super_admin required' };
+
+  // Find user by email in auth.users
+  try {
+    const adminClient = createAdminClient();
+    const { data } = await adminClient.auth.admin.listUsers();
+    const target = data?.users?.find((u) => u.email?.toLowerCase() === email.toLowerCase());
+    if (!target) return { ok: false, error: 'user_not_found — they must sign in first' };
+
+    const supabase = await createClient();
+    const { error } = await supabase.from('admins').insert({
+      user_id: target.id,
+      role,
+      scope_id: role === 'super_admin' ? null : scopeId || null,
+      created_by: adminUserId,
+    });
+    if (error) return { ok: false, error: error.message };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'unknown' };
+  }
 
   revalidatePath('/[locale]/admin', 'layout');
   return { ok: true };
 }
 
 export async function removeAdmin(id: string): Promise<ActionResult> {
-  if (!(await requireAdmin())) return { ok: false, error: 'forbidden' };
+  if (!(await requireSuperAdmin())) return { ok: false, error: 'forbidden' };
   const supabase = await createClient();
   const { error } = await supabase.from('admins').delete().eq('id', id);
   if (error) return { ok: false, error: error.message };

@@ -16,38 +16,68 @@ export default async function AdminsPage({ params }: Props) {
   const t = await getTranslations('admin.admins');
   const supabase = await createClient();
 
-  const { data: admins } = await supabase
-    .from('admins')
-    .select('id, user_id, role, created_at')
-    .order('created_at');
+  const [adminsRes, collegesRes, deptsRes] = await Promise.all([
+    supabase.from('admins').select('id, user_id, role, scope_id, created_at').order('created_at'),
+    supabase.from('colleges').select('id, name_en, name_ar').order('name_en'),
+    supabase.from('departments').select('id, name_en, name_ar, college_id').order('name_en'),
+  ]);
 
-  // Use admin client to get emails from auth.users
+  const colleges = (collegesRes.data ?? []) as Array<{
+    id: string;
+    name_en: string;
+    name_ar: string;
+  }>;
+  const departments = (deptsRes.data ?? []) as Array<{
+    id: string;
+    name_en: string;
+    name_ar: string;
+    college_id: string;
+  }>;
+
+  // Build scope name lookup
+  const collegeMap = new Map(colleges.map((c) => [c.id, c]));
+  const deptMap = new Map(departments.map((d) => [d.id, d]));
+
+  // Get emails from auth.users
   const emailMap: Record<string, string> = {};
   try {
     const adminClient = createAdminClient();
-    const userIds = (admins ?? []).map((a) => a.user_id).filter(Boolean);
-    if (userIds.length > 0) {
-      const { data } = await adminClient.auth.admin.listUsers();
-      for (const user of data?.users ?? []) {
-        if (user.email) {
-          emailMap[user.id] = user.email;
-        }
-      }
+    const { data } = await adminClient.auth.admin.listUsers();
+    for (const user of data?.users ?? []) {
+      if (user.email) emailMap[user.id] = user.email;
     }
-  } catch {
-    // Fallback: no emails
-  }
+  } catch {}
 
-  const adminsWithEmail = (admins ?? []).map((admin) => ({
-    ...admin,
-    email: emailMap[admin.user_id] ?? admin.user_id,
-  }));
+  const adminsWithDetails = (adminsRes.data ?? []).map((admin) => {
+    let scopeName: string | null = null;
+    if (admin.scope_id) {
+      const college = collegeMap.get(admin.scope_id);
+      const dept = deptMap.get(admin.scope_id);
+      scopeName = college
+        ? locale === 'ar'
+          ? college.name_ar
+          : college.name_en
+        : dept
+          ? locale === 'ar'
+            ? dept.name_ar
+            : dept.name_en
+          : admin.scope_id.slice(0, 8);
+    }
+    return {
+      ...admin,
+      email: emailMap[admin.user_id] ?? null,
+      scope_name: scopeName,
+    };
+  });
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">{t('title')}</h1>
       <ManageAdminsClient
-        admins={adminsWithEmail}
+        admins={adminsWithDetails}
+        colleges={colleges}
+        departments={departments}
+        locale={locale}
         translations={{
           email: t('email'),
           role: t('role'),
