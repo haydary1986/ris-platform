@@ -177,44 +177,52 @@ export default async function SdgPage({ params }: SdgPageProps) {
               .filter(Boolean)
               .join(', ');
             const journal = w.primary_location?.source?.display_name;
+            const doiUrl = w.doi
+              ? `https://doi.org/${w.doi.replace('https://doi.org/', '')}`
+              : null;
             return (
-              <Card key={i} className="hover:border-primary/30 transition-colors">
-                <CardContent className="space-y-2 py-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="text-sm font-medium leading-snug">{w.title}</h3>
-                    {w.publication_year ? (
-                      <span className="text-muted-foreground shrink-0 text-xs tabular-nums">
-                        {w.publication_year}
-                      </span>
+              <a
+                key={i}
+                href={doiUrl ?? '#'}
+                target={doiUrl ? '_blank' : undefined}
+                rel={doiUrl ? 'noopener' : undefined}
+                className={`block ${doiUrl ? 'cursor-pointer' : 'cursor-default'}`}
+              >
+                <Card className="hover:border-primary/40 hover:shadow-md transition-all">
+                  <CardContent className="space-y-2 py-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="text-sm font-medium leading-snug group-hover:text-primary">
+                        {w.title}
+                      </h3>
+                      {w.publication_year ? (
+                        <span className="text-muted-foreground shrink-0 text-xs tabular-nums">
+                          {w.publication_year}
+                        </span>
+                      ) : null}
+                    </div>
+                    {authors ? (
+                      <p className="text-xs text-muted-foreground italic">
+                        {authors}
+                        {(w.authorships?.length ?? 0) > 3 ? ' et al.' : ''}
+                      </p>
                     ) : null}
-                  </div>
-                  {authors ? (
-                    <p className="text-xs text-muted-foreground italic">
-                      {authors}
-                      {(w.authorships?.length ?? 0) > 3 ? ' et al.' : ''}
-                    </p>
-                  ) : null}
-                  {journal ? <p className="text-xs text-muted-foreground">{journal}</p> : null}
-                  <div className="flex items-center gap-3">
-                    {w.cited_by_count > 0 ? (
-                      <Badge variant="secondary" className="text-[10px]">
-                        {w.cited_by_count} {isAr ? 'اقتباس' : 'citations'}
-                      </Badge>
-                    ) : null}
-                    {w.doi ? (
-                      <a
-                        href={`https://doi.org/${w.doi.replace('https://doi.org/', '')}`}
-                        target="_blank"
-                        rel="noopener"
-                        className="text-primary inline-flex items-center gap-1 text-[10px] hover:underline"
-                      >
-                        <ExternalLink className="size-3" />
-                        DOI
-                      </a>
-                    ) : null}
-                  </div>
-                </CardContent>
-              </Card>
+                    {journal ? <p className="text-xs text-muted-foreground">{journal}</p> : null}
+                    <div className="flex items-center gap-3">
+                      {w.cited_by_count > 0 ? (
+                        <Badge variant="secondary" className="text-[10px]">
+                          {w.cited_by_count} {isAr ? 'اقتباس' : 'citations'}
+                        </Badge>
+                      ) : null}
+                      {doiUrl ? (
+                        <span className="text-primary inline-flex items-center gap-1 text-[10px]">
+                          <ExternalLink className="size-3" />
+                          {isAr ? 'عرض البحث' : 'View publication'}
+                        </span>
+                      ) : null}
+                    </div>
+                  </CardContent>
+                </Card>
+              </a>
             );
           })}
         </div>
