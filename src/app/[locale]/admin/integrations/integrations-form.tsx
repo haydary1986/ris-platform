@@ -146,6 +146,84 @@ const SERVICES: ServiceConfig[] = [
     ],
   },
   {
+    id: 'semantic_scholar',
+    title: 'Semantic Scholar (AI-Powered Research)',
+    titleAr: 'Semantic Scholar (بحث مدعوم بالذكاء الاصطناعي)',
+    description:
+      'Free API — 100 req/sec. Provides influential citations, paper recommendations, and AI-generated TLDRs. Get API key at semanticscholar.org/product/api.',
+    descriptionAr:
+      'API مجاني — 100 طلب/ثانية. يوفر الاقتباسات المؤثرة وتوصيات الأبحاث وملخصات AI. احصل على مفتاح من semanticscholar.org/product/api.',
+    link: 'https://www.semanticscholar.org/product/api',
+    linkLabel: 'Semantic Scholar API',
+    fields: [
+      {
+        key: 'integration.semantic_scholar.api_key',
+        label: 'API Key (optional — increases rate limit)',
+        labelAr: 'مفتاح API (اختياري — يزيد حد الطلبات)',
+        placeholder: '********',
+        secret: true,
+      },
+    ],
+  },
+  {
+    id: 'unpaywall',
+    title: 'Unpaywall (Open Access PDF Links)',
+    titleAr: 'Unpaywall (روابط PDF المجانية)',
+    description:
+      'Free API — finds legal Open Access PDFs for any DOI. Just needs your email. 100,000 req/day.',
+    descriptionAr:
+      'API مجاني — يجد روابط PDF مفتوحة لأي DOI. يحتاج بريدك الإلكتروني فقط. 100,000 طلب/يوم.',
+    link: 'https://unpaywall.org/products/api',
+    linkLabel: 'Unpaywall API',
+    fields: [
+      {
+        key: 'integration.unpaywall.email',
+        label: 'Contact Email',
+        labelAr: 'البريد الإلكتروني',
+        placeholder: 'admin@uoturath.edu.iq',
+      },
+    ],
+  },
+  {
+    id: 'crossref',
+    title: 'CrossRef (DOI Metadata)',
+    titleAr: 'CrossRef (بيانات DOI)',
+    description:
+      'Free API — verify DOIs, fetch publication metadata, citation counts. Polite pool with email gets better rate limits.',
+    descriptionAr:
+      'API مجاني — التحقق من DOI، جلب بيانات المنشورات، عدد الاقتباسات. أضف بريدك للحصول على حد أعلى.',
+    link: 'https://www.crossref.org/documentation/retrieve-metadata/rest-api/',
+    linkLabel: 'CrossRef API',
+    fields: [
+      {
+        key: 'integration.crossref.email',
+        label: 'Contact Email (for polite pool)',
+        labelAr: 'البريد الإلكتروني (للحصول على أولوية)',
+        placeholder: 'admin@uoturath.edu.iq',
+      },
+    ],
+  },
+  {
+    id: 'dimensions',
+    title: 'Dimensions (Digital Science)',
+    titleAr: 'Dimensions (ديجيتال ساينس)',
+    description:
+      'Free API for non-commercial use — publications, grants, patents, clinical trials, policy documents. Apply at dimensions.ai.',
+    descriptionAr:
+      'API مجاني للاستخدام غير التجاري — منشورات، منح، براءات اختراع. قدّم طلباً في dimensions.ai.',
+    link: 'https://www.dimensions.ai/products/free/',
+    linkLabel: 'Dimensions Free API',
+    fields: [
+      {
+        key: 'integration.dimensions.api_key',
+        label: 'API Key',
+        labelAr: 'مفتاح API',
+        placeholder: '********',
+        secret: true,
+      },
+    ],
+  },
+  {
     id: 'gsc',
     title: 'Google Search Console (SEO)',
     titleAr: 'Google Search Console (فهرسة SEO)',
