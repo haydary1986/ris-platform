@@ -290,7 +290,8 @@
       "settings": "Homepage settings",
       "audit": "Audit log",
       "colleges": "Colleges & departments",
-      "duplicates": "Duplicate publications"
+      "duplicates": "Duplicate publications",
+      "integrations": "Integrations"
     },
     "dashboard": {
       "title": "Admin Dashboard"

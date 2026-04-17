@@ -12,7 +12,15 @@ interface AdminLayoutProps {
   params: Promise<{ locale: string }>;
 }
 
-const NAV_KEYS = ['setup', 'admins', 'visibility', 'settings', 'audit', 'colleges'] as const;
+const NAV_KEYS = [
+  'setup',
+  'integrations',
+  'admins',
+  'visibility',
+  'settings',
+  'audit',
+  'colleges',
+] as const;
 
 export default async function AdminLayout({ children, params }: AdminLayoutProps) {
   const { locale } = await params;
