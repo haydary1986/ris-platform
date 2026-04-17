@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { ManageAdminsClient } from './manage-admins-client';
 
 export const dynamic = 'force-dynamic';
@@ -20,16 +21,27 @@ export default async function AdminsPage({ params }: Props) {
     .select('id, user_id, role, created_at')
     .order('created_at');
 
-  const adminsWithEmail = await Promise.all(
-    (admins ?? []).map(async (admin) => {
-      const { data: researcher } = await supabase
-        .from('researchers')
-        .select('private_email')
-        .eq('user_id', admin.user_id)
-        .maybeSingle();
-      return { ...admin, email: researcher?.private_email ?? null };
-    }),
-  );
+  // Use admin client to get emails from auth.users
+  const emailMap: Record<string, string> = {};
+  try {
+    const adminClient = createAdminClient();
+    const userIds = (admins ?? []).map((a) => a.user_id).filter(Boolean);
+    if (userIds.length > 0) {
+      const { data } = await adminClient.auth.admin.listUsers();
+      for (const user of data?.users ?? []) {
+        if (user.email) {
+          emailMap[user.id] = user.email;
+        }
+      }
+    }
+  } catch {
+    // Fallback: no emails
+  }
+
+  const adminsWithEmail = (admins ?? []).map((admin) => ({
+    ...admin,
+    email: emailMap[admin.user_id] ?? admin.user_id,
+  }));
 
   return (
     <div className="space-y-6">
