@@ -95,13 +95,11 @@ export async function setVisibilityOverride(
 
 export async function updateSetting(key: string, value: unknown): Promise<ActionResult> {
   if (!(await requireAdmin())) return { ok: false, error: 'forbidden' };
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from('app_settings')
-    .update({ value: JSON.stringify(value) })
-    .eq('key', key);
+  const supabase = createAdminClient();
+  const jsonValue = typeof value === 'string' ? value : JSON.stringify(value);
+  const { error } = await supabase.from('app_settings').update({ value: jsonValue }).eq('key', key);
   if (error) return { ok: false, error: error.message };
-  revalidatePath('/[locale]/admin/settings', 'page');
+  revalidatePath('/[locale]/admin', 'layout');
   return { ok: true };
 }
 
