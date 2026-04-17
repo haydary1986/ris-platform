@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, initSupabaseConfig } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -17,8 +17,13 @@ export function SignInForm({ next, error }: SignInFormProps) {
   const tCommon = useTranslations('common');
   const locale = useLocale();
   const [loading, setLoading] = useState(false);
+  const [ready, setReady] = useState(false);
 
   const safeNext = next?.startsWith('/') ? next : `/${locale}/manage-profile`;
+
+  useEffect(() => {
+    initSupabaseConfig().then(() => setReady(true));
+  }, []);
 
   async function handleGoogle() {
     setLoading(true);
@@ -35,7 +40,7 @@ export function SignInForm({ next, error }: SignInFormProps) {
         setLoading(false);
       }
     } catch (e) {
-      toast.error(tCommon('error'));
+      toast.error(e instanceof Error ? e.message : tCommon('error'));
       setLoading(false);
     }
   }
@@ -52,7 +57,7 @@ export function SignInForm({ next, error }: SignInFormProps) {
             {t('error_generic')}
           </p>
         ) : null}
-        <Button onClick={handleGoogle} disabled={loading} className="w-full">
+        <Button onClick={handleGoogle} disabled={loading || !ready} className="w-full">
           {loading ? tCommon('loading') : t('google')}
         </Button>
         <p className="text-muted-foreground text-center text-xs">{t('institutional_only')}</p>
