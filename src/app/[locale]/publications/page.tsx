@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, ExternalLink, Quote, TrendingUp } from 'lucide-react';
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 const OPENALEX_INSTITUTION_ID = 'I2801460691';
 
@@ -31,32 +31,40 @@ async function fetchPublications(year?: string, type?: string, page = 1) {
   if (year) filters.push(`publication_year:${year}`);
   if (type) filters.push(`type:${type}`);
 
-  const res = await fetch(
-    `https://api.openalex.org/works?filter=${filters.join(',')}&per_page=25&page=${page}&sort=cited_by_count:desc&select=title,publication_year,doi,cited_by_count,type,is_oa,authorships,primary_location`,
-    { next: { revalidate: 300 } },
-  );
-  if (!res.ok) return { total: 0, works: [], perPage: 25 };
-  const d = await res.json();
-  return {
-    total: d.meta?.count ?? 0,
-    works: (d.results ?? []) as OpenAlexWork[],
-    perPage: d.meta?.per_page ?? 25,
-  };
+  try {
+    const res = await fetch(
+      `https://api.openalex.org/works?filter=${filters.join(',')}&per_page=25&page=${page}&sort=cited_by_count:desc&select=title,publication_year,doi,cited_by_count,type,is_oa,authorships,primary_location&mailto=ris@uoturath.edu.iq`,
+      { cache: 'no-store' },
+    );
+    if (!res.ok) return { total: 0, works: [], perPage: 25 };
+    const d = await res.json();
+    return {
+      total: d.meta?.count ?? 0,
+      works: (d.results ?? []) as OpenAlexWork[],
+      perPage: d.meta?.per_page ?? 25,
+    };
+  } catch {
+    return { total: 0, works: [], perPage: 25 };
+  }
 }
 
 async function fetchYearFacets() {
-  const res = await fetch(
-    `https://api.openalex.org/works?filter=institutions.id:${OPENALEX_INSTITUTION_ID},is_retracted:false&group_by=publication_year`,
-    { next: { revalidate: 3600 } },
-  );
-  if (!res.ok) return [];
-  const d = await res.json();
-  return (d.group_by ?? [])
-    .filter((g: { key: string; count: number }) => Number(g.key) >= 2015)
-    .sort((a: { key: string }, b: { key: string }) => Number(b.key) - Number(a.key)) as Array<{
-    key: string;
-    count: number;
-  }>;
+  try {
+    const res = await fetch(
+      `https://api.openalex.org/works?filter=institutions.id:${OPENALEX_INSTITUTION_ID},is_retracted:false&group_by=publication_year&mailto=ris@uoturath.edu.iq`,
+      { cache: 'no-store' },
+    );
+    if (!res.ok) return [];
+    const d = await res.json();
+    return (d.group_by ?? [])
+      .filter((g: { key: string; count: number }) => Number(g.key) >= 2015)
+      .sort((a: { key: string }, b: { key: string }) => Number(b.key) - Number(a.key)) as Array<{
+      key: string;
+      count: number;
+    }>;
+  } catch {
+    return [];
+  }
 }
 
 export default async function PublicationsPage({ params, searchParams }: Props) {
