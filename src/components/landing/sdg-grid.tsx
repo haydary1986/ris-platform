@@ -1,11 +1,14 @@
 import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
+import { buttonVariants } from '@/components/ui/button';
+import { BookOpen } from 'lucide-react';
 import type { Locale } from '@/i18n/routing';
 
 export async function SdgGrid({ locale }: { locale?: Locale }) {
   const t = await getTranslations('landing.sdg');
   const lang = locale ?? 'en';
+  const isAr = lang === 'ar';
 
   return (
     <section>
@@ -36,6 +39,15 @@ export async function SdgGrid({ locale }: { locale?: Locale }) {
             );
           })}
         </ul>
+        <div className="mt-8 text-center">
+          <Link
+            href="/sdg-publications"
+            className={buttonVariants({ variant: 'default', size: 'lg' })}
+          >
+            <BookOpen className="size-4" />
+            {isAr ? 'تصفح جميع أبحاث التنمية المستدامة' : 'Browse all SDG Research'}
+          </Link>
+        </div>
       </div>
     </section>
   );
