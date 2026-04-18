@@ -10,6 +10,7 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { routing } from '@/i18n/routing';
 import { siteUrl } from '@/lib/seo/site';
+import { createClient } from '@/lib/supabase/server';
 import '../globals.css';
 
 const inter = Inter({
@@ -65,6 +66,17 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   const messages = await getMessages();
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
+  let faviconUrl = '';
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('app_settings')
+      .select('value')
+      .eq('key', 'branding.favicon_url')
+      .maybeSingle();
+    if (data?.value) faviconUrl = String(data.value).replace(/^"|"$/g, '');
+  } catch {}
+
   return (
     <html
       lang={locale}
@@ -72,6 +84,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       suppressHydrationWarning
       className={`${inter.variable} ${cairo.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>{faviconUrl ? <link rel="icon" href={faviconUrl} type="image/png" /> : null}</head>
       <body className="min-h-full flex flex-col">
         <script
           dangerouslySetInnerHTML={{
