@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { buildLanguageAlternates, canonicalForLocale } from '@/lib/seo/site';
 import { getInstitutionAnalytics } from '@/lib/openalex/analytics';
+import { getScopusPublicationCount } from '@/lib/scopus/institution';
 import { createClient } from '@/lib/supabase/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -62,7 +63,10 @@ export default async function AnalyticsPage({ params }: AnalyticsPageProps) {
   setRequestLocale(locale);
 
   const isAr = locale === 'ar';
-  const data = await getInstitutionAnalytics();
+  const [data, scopusCount] = await Promise.all([
+    getInstitutionAnalytics(),
+    getScopusPublicationCount(),
+  ]);
 
   // Local DB: top colleges & departments
   let topColleges: CollegeStats[] = [];
@@ -122,11 +126,13 @@ export default async function AnalyticsPage({ params }: AnalyticsPageProps) {
   const oaPercent =
     data.totalWorks > 0 ? Math.round((data.openAccessCount / data.totalWorks) * 100) : 0;
 
+  const pubCount = scopusCount ?? data.totalWorks;
+
   const kpis = [
     {
       icon: BookOpen,
-      value: data.totalWorks.toLocaleString(locale),
-      label: isAr ? 'منشور بحثي' : 'Publications',
+      value: pubCount.toLocaleString(locale),
+      label: isAr ? 'منشور في Scopus' : 'Scopus Publications',
     },
     {
       icon: Quote,

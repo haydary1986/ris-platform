@@ -1,4 +1,5 @@
 import { getInstitutionStats } from '@/lib/openalex/institution';
+import { getScopusPublicationCount } from '@/lib/scopus/institution';
 import { BookOpen, Quote, TrendingUp, Award, Users, BarChart3 } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 
@@ -7,17 +8,21 @@ interface Props {
 }
 
 export async function InstitutionStats({ locale }: Props) {
-  const stats = await getInstitutionStats();
+  const [stats, scopusCount] = await Promise.all([
+    getInstitutionStats(),
+    getScopusPublicationCount(),
+  ]);
   if (!stats) return null;
 
   const isAr = locale === 'ar';
+  const pubCount = scopusCount ?? stats.worksCount;
 
   const kpis = [
     {
       icon: BookOpen,
-      value: stats.worksCount.toLocaleString(locale),
-      label: isAr ? 'منشور بحثي' : 'Publications',
-      href: '/researchers' as const,
+      value: pubCount.toLocaleString(locale),
+      label: isAr ? 'منشور في Scopus' : 'Scopus Publications',
+      href: '/publications' as const,
     },
     {
       icon: Quote,
