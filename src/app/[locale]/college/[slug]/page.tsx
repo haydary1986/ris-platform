@@ -44,7 +44,7 @@ interface OpenAlexWork {
   doi: string | null;
   cited_by_count: number;
   type: string;
-  is_oa: boolean;
+  open_access?: { is_oa?: boolean };
   authorships: Array<{ author: { display_name: string } }>;
   primary_location?: { source?: { display_name: string } } | null;
 }
@@ -77,7 +77,7 @@ async function fetchTopPublications(researcherNames: string[]): Promise<OpenAlex
 
   try {
     const res = await fetch(
-      `https://api.openalex.org/works?filter=institutions.id:${OPENALEX_INSTITUTION_ID},is_retracted:false&per_page=10&sort=cited_by_count:desc&select=title,publication_year,doi,cited_by_count,type,is_oa,authorships,primary_location`,
+      `https://api.openalex.org/works?filter=institutions.id:${OPENALEX_INSTITUTION_ID},is_retracted:false&per_page=10&sort=cited_by_count:desc&select=title,publication_year,doi,cited_by_count,type,open_access,authorships,primary_location`,
       { next: { revalidate: 3600 } },
     );
     if (!res.ok) return [];
@@ -296,7 +296,7 @@ export default async function CollegePage({ params }: CollegePageProps) {
                             <Quote className="me-1 size-2.5" /> {w.cited_by_count}
                           </Badge>
                         ) : null}
-                        {w.is_oa ? (
+                        {w.open_access?.is_oa ? (
                           <Badge
                             variant="outline"
                             className="border-green-300 text-[10px] text-green-600"

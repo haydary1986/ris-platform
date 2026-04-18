@@ -21,7 +21,7 @@ interface OpenAlexWork {
   doi: string | null;
   cited_by_count: number;
   type: string;
-  is_oa: boolean;
+  open_access?: { is_oa?: boolean };
   authorships: Array<{ author: { display_name: string } }>;
   primary_location?: { source?: { display_name: string } } | null;
 }
@@ -33,7 +33,7 @@ async function fetchPublications(year?: string, type?: string, page = 1) {
 
   try {
     const res = await fetch(
-      `https://api.openalex.org/works?filter=${filters.join(',')}&per_page=25&page=${page}&sort=cited_by_count:desc&select=title,publication_year,doi,cited_by_count,type,is_oa,authorships,primary_location&mailto=ris@uoturath.edu.iq`,
+      `https://api.openalex.org/works?filter=${filters.join(',')}&per_page=25&page=${page}&sort=cited_by_count:desc&select=title,publication_year,doi,cited_by_count,type,open_access,authorships,primary_location&mailto=ris@uoturath.edu.iq`,
       { cache: 'no-store' },
     );
     if (!res.ok) return { total: 0, works: [], perPage: 25 };
@@ -159,7 +159,7 @@ export default async function PublicationsPage({ params, searchParams }: Props) 
                         <Quote className="size-2.5 me-1" /> {w.cited_by_count}
                       </Badge>
                     ) : null}
-                    {w.is_oa ? (
+                    {w.open_access?.is_oa ? (
                       <Badge
                         variant="outline"
                         className="text-[10px] text-green-600 border-green-300"
