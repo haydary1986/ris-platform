@@ -1,11 +1,9 @@
-import { Menu } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from './language-switcher';
 import { UserMenu } from './user-menu';
+import { MobileNav } from './mobile-nav';
 import { createClient } from '@/lib/supabase/server';
 
 interface NavLink {
@@ -115,34 +113,19 @@ export async function Header() {
             <UserMenu user={user} isAdmin={isAdmin} />
           </div>
 
-          <Sheet>
-            <SheetTrigger
-              render={
-                <Button variant="ghost" size="icon" className="md:hidden" aria-label="Menu" />
-              }
-            >
-              <Menu className="size-5" />
-            </SheetTrigger>
-            <SheetContent side="right" className="w-72">
-              <SheetHeader>
-                <SheetTitle>{tCommon('app_name')}</SheetTitle>
-              </SheetHeader>
-              <nav className="mt-6 flex flex-col gap-2 px-4">
-                {NAV_LINKS.map((link) => (
-                  <Link
-                    key={link.key}
-                    href={link.href}
-                    className="hover:bg-accent rounded-md px-3 py-2 text-sm font-medium"
-                  >
-                    {tNav(link.key)}
-                  </Link>
-                ))}
-              </nav>
-              <div className="mt-6 border-t px-4 pt-4">
-                <UserMenu user={user} isAdmin={isAdmin} />
-              </div>
-            </SheetContent>
-          </Sheet>
+          <MobileNav
+            title={tCommon('app_name')}
+            links={NAV_LINKS.map((link) => (
+              <Link
+                key={link.key}
+                href={link.href}
+                className="hover:bg-accent rounded-md px-3 py-2 text-sm font-medium"
+              >
+                {tNav(link.key)}
+              </Link>
+            ))}
+            userMenu={<UserMenu user={user} isAdmin={isAdmin} />}
+          />
         </div>
       </div>
     </header>
