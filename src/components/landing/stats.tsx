@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
+import { getInstitutionStats } from '@/lib/openalex/institution';
 
 interface HomepageStats {
   researchers: number;
@@ -11,9 +12,19 @@ interface HomepageStats {
 async function fetchStats(): Promise<HomepageStats | null> {
   try {
     const supabase = await createClient();
-    const { data, error } = await supabase.rpc('get_homepage_stats');
-    if (error || !data) return null;
-    return data as HomepageStats;
+    const [{ data: dbData, error }, openAlex] = await Promise.all([
+      supabase.rpc('get_homepage_stats'),
+      // OpenAlex counts every work that lists the institution as an
+      // affiliation — this matches what users expect when they see
+      // "publications" (institution-wide output, not just imports).
+      getInstitutionStats(),
+    ]);
+    if (error || !dbData) return null;
+    const base = dbData as HomepageStats;
+    return {
+      ...base,
+      publications: openAlex?.worksCount ?? base.publications,
+    };
   } catch {
     return null;
   }
