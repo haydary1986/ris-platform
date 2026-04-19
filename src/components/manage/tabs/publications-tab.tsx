@@ -19,6 +19,8 @@ import {
   ExternalLink,
   ChevronRight,
   ChevronLeft,
+  FileSpreadsheet,
+  AlertTriangle,
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { translateFieldName, translateErrorMessage } from '@/lib/manage/error-messages';
@@ -321,12 +323,34 @@ function AddPublicationDialog({
 // --- Google Scholar One-Click Import ---
 function ScholarQuickImport() {
   const fileRef = useRef<HTMLInputElement>(null);
+  const csvFileRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
   const [showGuide, setShowGuide] = useState(false);
   const [showExtGuide, setShowExtGuide] = useState(false);
   const [extStep, setExtStep] = useState(0);
 
   const siteUrl = typeof window !== 'undefined' ? window.location.origin : '';
+
+  function uploadCsv(file: File) {
+    startTransition(async () => {
+      const text = await file.text();
+      const res = await fetch('/api/import/scholar-csv', { method: 'POST', body: text });
+      const json = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        inserted?: number;
+        updated?: number;
+        skipped?: number;
+        error?: string;
+      };
+      if (res.ok && json.ok) {
+        toast.success(
+          `Imported ${json.inserted ?? 0} new, ${json.updated ?? 0} updated, ${json.skipped ?? 0} skipped`,
+        );
+      } else {
+        toast.error(json.error ?? 'Import failed');
+      }
+    });
+  }
 
   const bookmarkletCode = `javascript:void(function(){if(!location.host.includes('scholar.google.com')){alert('Open your Google Scholar profile first!');return;}var p=[];document.querySelectorAll('#gsc_a_b .gsc_a_tr').forEach(function(r){var t=r.querySelector('.gsc_a_at');var g=r.querySelectorAll('.gs_gray');var y=r.querySelector('.gsc_a_h');var c=r.querySelector('.gsc_a_ac');if(!t)return;p.push({title:t.textContent.trim(),authors:(g[0]?g[0].textContent:'').split(',').map(function(s){return s.trim()}).filter(Boolean),journal_name:g[1]?g[1].textContent.trim():null,publication_year:y&&/^[0-9]{4}$/.test(y.textContent)?Number(y.textContent):null,scholar_citations:c&&/^[0-9]+$/.test(c.textContent.trim())?Number(c.textContent):0})});if(p.length===0){alert('No publications found. Make sure you are on your Scholar profile and publications are visible.');return;}var d={version:1,provider:'scholar',publications:p};var e=btoa(unescape(encodeURIComponent(JSON.stringify(d))));window.location.href='${siteUrl}/en/import-scholar#'+e;}())`;
 
@@ -479,6 +503,17 @@ function ScholarQuickImport() {
           e.target.value = '';
         }}
       />
+      <input
+        ref={csvFileRef}
+        type="file"
+        accept=".csv,text/csv"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) uploadCsv(f);
+          e.target.value = '';
+        }}
+      />
 
       <Button type="button" variant="outline" size="sm" onClick={() => setShowGuide(true)}>
         <Upload className="size-4" />
@@ -492,15 +527,71 @@ function ScholarQuickImport() {
             <DialogTitle>Import from Google Scholar</DialogTitle>
           </DialogHeader>
           <div className="space-y-5 text-sm">
-            {/* Method 1: One-click bookmarklet */}
-            <div className="rounded-lg border-2 border-primary/30 bg-primary/5 p-4 space-y-3">
+            {/* Method 1: Scholar-native CSV export (most reliable) */}
+            <div className="rounded-lg border-2 border-emerald-500/40 bg-emerald-500/5 p-4 space-y-3">
               <div className="flex items-center gap-2">
-                <span className="bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-xs font-bold">
-                  Easy
+                <FileSpreadsheet className="size-5 text-emerald-600 dark:text-emerald-400" />
+                <p className="font-semibold">Upload CSV from Scholar</p>
+                <span className="ms-auto rounded-full bg-emerald-600/15 px-2 py-0.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                  Recommended
                 </span>
-                <p className="font-semibold">One-click import (recommended)</p>
               </div>
-              <ol className="list-decimal ms-5 space-y-2 text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
+                Google Scholar exports CSV directly — no scripts, no browser quirks.
+              </p>
+              <ol className="list-decimal ms-5 space-y-1 text-muted-foreground">
+                <li>
+                  Open your{' '}
+                  <a
+                    href="https://scholar.google.com/citations"
+                    target="_blank"
+                    rel="noopener"
+                    className="text-primary underline"
+                  >
+                    Scholar profile
+                  </a>{' '}
+                  and click <strong>SHOW MORE</strong> until it disables.
+                </li>
+                <li>
+                  Tick the header checkbox, then click <strong>EXPORT → CSV</strong>.
+                </li>
+                <li>Upload the downloaded citations.csv below.</li>
+              </ol>
+              <Button
+                type="button"
+                size="sm"
+                disabled={isPending}
+                onClick={() => {
+                  setShowGuide(false);
+                  csvFileRef.current?.click();
+                }}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              >
+                {isPending ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <FileSpreadsheet className="size-4" />
+                )}
+                Upload citations.csv
+              </Button>
+            </div>
+
+            {/* Method 2: One-click bookmarklet (may be blocked by CSP) */}
+            <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-semibold">
+                  Advanced
+                </span>
+                <p className="font-semibold">One-click bookmarklet</p>
+              </div>
+              <div className="flex gap-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-2 text-xs text-amber-900 dark:text-amber-200">
+                <AlertTriangle className="mt-0.5 size-3.5 shrink-0" />
+                <span>
+                  Scholar&apos;s CSP and React XSS guards block bookmarklets silently on some
+                  browsers. If CSV doesn&apos;t work for you, try this.
+                </span>
+              </div>
+              <ol className="list-decimal ms-5 space-y-1 text-muted-foreground">
                 <li>
                   Drag this button to your <strong>bookmarks bar</strong>:
                 </li>
@@ -512,14 +603,14 @@ function ScholarQuickImport() {
                     e.preventDefault();
                     toast.info('Drag this button to your bookmarks bar!');
                   }}
-                  className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg hover:bg-primary/90 cursor-grab active:cursor-grabbing"
+                  className="inline-flex items-center gap-2 rounded-lg border bg-background px-5 py-2 text-sm font-semibold shadow-sm hover:bg-muted cursor-grab active:cursor-grabbing"
                   draggable="true"
                 >
                   <Upload className="size-4" />
                   Import to RIS
                 </a>
               </div>
-              <ol className="list-decimal ms-5 space-y-2 text-muted-foreground" start={2}>
+              <ol className="list-decimal ms-5 space-y-1 text-muted-foreground" start={2}>
                 <li>
                   Open your{' '}
                   <a
@@ -528,7 +619,7 @@ function ScholarQuickImport() {
                     rel="noopener"
                     className="text-primary underline"
                   >
-                    Google Scholar profile
+                    Scholar profile
                   </a>
                 </li>
                 <li>
