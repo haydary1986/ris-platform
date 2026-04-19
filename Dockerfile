@@ -1,5 +1,9 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
+# Pin npm to 11.x — the lockfile is generated against npm 11's peer
+# resolver, and npm 10 (shipped with Node 20) rejects it with
+# "Missing: @swc/helpers@0.5.21 from lock file".
+RUN npm install -g npm@11
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
 
