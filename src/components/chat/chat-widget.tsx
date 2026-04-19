@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { MessageCircle, Send, Sparkles, X, Loader2 } from 'lucide-react';
+import { MessageCircle, Rocket, Send, Sparkles, X, Loader2 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -37,7 +37,8 @@ function renderMarkdown(text: string): { __html: string } {
 export function ChatWidget() {
   const locale = useLocale() as 'ar' | 'en';
   const t = useTranslations('chat');
-  const [available, setAvailable] = useState(false);
+  // null = still checking, false = coming-soon (no API key), true = fully wired
+  const [available, setAvailable] = useState<boolean | null>(null);
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -153,10 +154,62 @@ export function ChatWidget() {
     }
   }
 
-  if (!available) return null;
+  // Still probing — render nothing to avoid a flicker.
+  if (available === null) return null;
 
   const side = locale === 'ar' ? 'left-4' : 'right-4';
   const panelSide = locale === 'ar' ? 'left-4' : 'right-4';
+
+  // Coming-soon mode: the API key isn't configured yet, so we tease the
+  // feature instead of hiding the icon. Clicking opens a small panel that
+  // says it's launching soon.
+  if (!available) {
+    return (
+      <>
+        {!open ? (
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label={t('coming_soon.open')}
+            className={`bg-primary text-primary-foreground hover:bg-primary/90 fixed bottom-4 ${side} z-50 flex size-14 items-center justify-center rounded-full shadow-lg transition hover:scale-105`}
+          >
+            <span className="bg-amber-500 text-amber-950 absolute -top-1 -end-1 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide">
+              {t('coming_soon.badge')}
+            </span>
+            <Sparkles className="size-6" />
+          </button>
+        ) : (
+          <div
+            className={`bg-background fixed bottom-4 ${panelSide} z-50 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-xl border shadow-2xl`}
+            role="dialog"
+            aria-label={t('coming_soon.title')}
+          >
+            <div className="bg-primary text-primary-foreground flex items-center gap-2 px-4 py-3">
+              <Rocket className="size-4" />
+              <p className="flex-1 truncate text-sm font-semibold">{t('coming_soon.title')}</p>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label={t('close')}
+                className="hover:bg-primary-foreground/10 rounded p-1"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+            <div className="space-y-3 px-4 py-5 text-center">
+              <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-amber-500/15">
+                <Rocket className="size-7 text-amber-600 dark:text-amber-400" />
+              </div>
+              <p className="text-sm font-semibold">{t('coming_soon.heading')}</p>
+              <p className="text-muted-foreground text-xs leading-relaxed">
+                {t('coming_soon.body')}
+              </p>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
 
   return (
     <>

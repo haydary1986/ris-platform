@@ -109,6 +109,13 @@
       "rate_limited": "Message limit reached. Please try again later.",
       "not_configured": "AI assistant is not configured yet.",
       "generic": "Something went wrong. Please try again."
+    },
+    "coming_soon": {
+      "open": "AI assistant — coming soon",
+      "badge": "Soon",
+      "title": "AI Assistant",
+      "heading": "Launching very soon",
+      "body": "Our AI research assistant will help you find the right researcher by field or topic in one message. Check back shortly."
     }
   },
   "footer": {
