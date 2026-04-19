@@ -437,7 +437,30 @@
     "subtitle": "ثلاث مصادر، دمج موحَّد. تُحلّ التعارضات بـ DOI أولاً ثم بمطابقة العنوان.",
     "scholar": {
       "title": "Google Scholar",
-      "intro": "Scholar بلا API عام. اختر إحدى الطريقتين أدناه.",
+      "intro": "أسرع طريقة هي تصدير CSV من ملفك في Scholar — بدون سكربتات ولا إضافات ولا scraping.",
+      "bookmarklet_warning": {
+        "title": "لا تستخدم سكربت Console كـ Bookmarklet",
+        "body": "Google Scholar يحجب روابط javascript: بصمت عبر CSP، وReact يحجبها على هذه الصفحة كحماية من XSS. استخدم رفع CSV أعلاه، أو إذا اضطررت، الصق السكربت في DevTools Console داخل scholar.google.com."
+      },
+      "open_profile": {
+        "title": "فتح ملفك في Scholar",
+        "intro": "أدخل معرّف Scholar (من scholar.google.com/citations?user=...) لفتح ملفك في تبويب جديد، أو اتركه فارغاً لفتح صفحة Scholar الرئيسية.",
+        "id_placeholder": "معرّف Scholar (اختياري)",
+        "open": "فتح Scholar"
+      },
+      "csv": {
+        "title": "رفع ملف CSV من Scholar",
+        "recommended_badge": "مفضّل",
+        "intro": "Google Scholar يسمح بتصدير منشوراتك بصيغة CSV مباشرة — أسهل وأكثر موثوقية.",
+        "step_1": "افتح ملفك في Scholar واضغط SHOW MORE في الأسفل حتى تتحمّل كل المنشورات.",
+        "step_2": "ضع علامة ✓ في رأس العمود لتحديد كل المنشورات.",
+        "step_3": "اضغط EXPORT → CSV. سيُنزَّل ملف citations.csv.",
+        "step_4": "ارفع هذا الملف بالأسفل.",
+        "upload_button": "رفع citations.csv"
+      },
+      "advanced": {
+        "title": "خيارات متقدّمة: الإضافة وسكربت Console"
+      },
       "extension": {
         "title": "إضافة المتصفح (مفضّلة)",
         "step_1": "نزّل وفُك ضغط إضافة RIS Scholar Importer.",
@@ -448,11 +471,13 @@
       },
       "console": {
         "title": "سكربت Console (بديل)",
-        "intro": "استخدمه إذا تعذّر تثبيت الإضافة.",
-        "step_1": "افتح صفحة ملفك في Google Scholar.",
-        "step_2": "افتح DevTools → Console (F12).",
-        "step_3": "ألصق السكربت أدناه واضغط Enter. سيُنزَّل ملف .mrhenc.",
-        "step_4": "ارفع الملف هنا.",
+        "intro": "استخدمه إذا تعذّر تثبيت الإضافة. يجب تشغيل السكربت في DevTools Console داخل scholar.google.com — لا كـ bookmarklet ولا على هذه الصفحة.",
+        "step_1": "في تبويب جديد، افتح ملفك في Scholar (scholar.google.com/citations?user=...). اضغط \"SHOW MORE\" في الأسفل حتى يتعطّل الزر ليتحمّل كل المنشورات.",
+        "step_2": "اضغط F12 لفتح DevTools ثم انتقل لتبويب Console.",
+        "step_3": "إذا ظهر تحذير Chrome \"Don't paste code…\"، اكتب",
+        "step_3_suffix": "ثم Enter لتفعيل اللصق.",
+        "step_4": "الصق السكربت أدناه ثم Enter. سيُنزَّل ملف .mrhenc تلقائياً.",
+        "step_5": "ارفع الملف المُنزَّل هنا.",
         "copy_script": "نسخ السكربت",
         "copied": "تم النسخ"
       },
@@ -461,7 +486,9 @@
         "drop": "أسقط ملف .mrhenc هنا، أو انقر للاختيار.",
         "uploading": "جارٍ الرفع…",
         "ok": "أُضيفت {inserted} جديدة، حُدِّثت {updated}، تُجوهلت {skipped}.",
+        "warnings": "{count} تحذيرات أثناء التحليل — مثلاً: {first}",
         "error_format": "صيغة الملف غير صالحة.",
+        "error_empty": "تم تحليل الملف لكن لم يحتوِ على صفوف قابلة للاستخدام.",
         "error_version": "هذا الملف من إضافة قديمة. حدّث الإضافة."
       }
     },

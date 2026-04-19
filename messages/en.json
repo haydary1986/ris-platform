@@ -437,7 +437,30 @@
     "subtitle": "Three providers, one merger. Conflicts resolve by DOI first, then fuzzy title.",
     "scholar": {
       "title": "Google Scholar",
-      "intro": "Google Scholar has no public API. Pick one of the two flows below.",
+      "intro": "The fastest path is to export a CSV from your Scholar profile — no scripts, no extensions, no scraping.",
+      "bookmarklet_warning": {
+        "title": "Do NOT use the console script as a bookmarklet",
+        "body": "Google Scholar's CSP silently blocks javascript: bookmarklets, and React blocks them on this page as an XSS precaution. Use the CSV upload above — or, if you must, paste the script in DevTools Console while on scholar.google.com."
+      },
+      "open_profile": {
+        "title": "Open your Scholar profile",
+        "intro": "Enter your Scholar user ID (from scholar.google.com/citations?user=...) to open your profile in a new tab, or leave empty to open Scholar home.",
+        "id_placeholder": "Scholar user ID (optional)",
+        "open": "Open Scholar"
+      },
+      "csv": {
+        "title": "Upload CSV exported from Scholar",
+        "recommended_badge": "Recommended",
+        "intro": "Google Scholar lets you export your publications as CSV directly. This is the easiest, most reliable method.",
+        "step_1": "Open your Scholar profile and click SHOW MORE at the bottom until every publication is loaded.",
+        "step_2": "Tick the box in the column header to select all publications.",
+        "step_3": "Click EXPORT → CSV. A citations.csv file downloads.",
+        "step_4": "Upload that file below.",
+        "upload_button": "Upload citations.csv"
+      },
+      "advanced": {
+        "title": "Advanced: extension and console script"
+      },
       "extension": {
         "title": "Browser extension (recommended)",
         "step_1": "Download and unzip the RIS Scholar Importer extension.",
@@ -448,11 +471,13 @@
       },
       "console": {
         "title": "Console script (fallback)",
-        "intro": "Use this if you can't install the extension.",
-        "step_1": "Open your Google Scholar profile page.",
-        "step_2": "Open the browser DevTools console (F12 → Console).",
-        "step_3": "Paste the snippet below and press Enter. A .mrhenc file will download.",
-        "step_4": "Upload the file here.",
+        "intro": "Use this if you can't install the extension. The script must run in DevTools Console on scholar.google.com — not as a bookmarklet and not on this page.",
+        "step_1": "In a new tab, open your Google Scholar profile (scholar.google.com/citations?user=...). Click \"SHOW MORE\" at the bottom until it's disabled so all publications are loaded.",
+        "step_2": "Press F12 to open DevTools, then switch to the Console tab.",
+        "step_3": "If Chrome warns \"Don't paste code…\", type",
+        "step_3_suffix": "and press Enter to unlock pasting.",
+        "step_4": "Paste the snippet below and press Enter. A .mrhenc file downloads automatically.",
+        "step_5": "Upload the downloaded file here.",
         "copy_script": "Copy script",
         "copied": "Copied"
       },
@@ -461,7 +486,9 @@
         "drop": "Drop the .mrhenc file here, or click to choose.",
         "uploading": "Uploading…",
         "ok": "Imported {inserted} new, {updated} updated, {skipped} skipped.",
+        "warnings": "{count} parse warnings — e.g. {first}",
         "error_format": "Invalid file format.",
+        "error_empty": "The file parsed but contained no usable rows.",
         "error_version": "This .mrhenc was produced by an outdated extension. Please update."
       }
     },
