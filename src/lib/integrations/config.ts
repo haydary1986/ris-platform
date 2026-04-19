@@ -39,3 +39,9 @@ export async function getOrcidClientSecret(): Promise<string> {
 export async function getScopusApiKey(): Promise<string> {
   return process.env.SCOPUS_API_KEY || (await getIntegrationValue('integration.scopus.api_key'));
 }
+
+export async function getDeepseekApiKey(): Promise<string> {
+  return (
+    process.env.DEEPSEEK_API_KEY || (await getIntegrationValue('integration.deepseek.api_key'))
+  );
+}

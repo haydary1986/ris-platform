@@ -91,6 +91,26 @@
       }
     }
   },
+  "chat": {
+    "open": "Open AI assistant",
+    "close": "Close",
+    "title": "AI Research Assistant",
+    "subtitle": "Find researchers by topic or field",
+    "welcome": "Ask me to find researchers by field, topic, or interest — I know the AL-Turath directory.",
+    "placeholder": "e.g. I need an AI researcher…",
+    "send": "Send",
+    "disclaimer": "AI-generated. Verify important information on the researcher's profile.",
+    "examples": {
+      "ai": "Find me an AI researcher",
+      "pubs": "Who has the most publications?",
+      "sdg": "Who works on sustainable development?"
+    },
+    "errors": {
+      "rate_limited": "Message limit reached. Please try again later.",
+      "not_configured": "AI assistant is not configured yet.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
   "footer": {
     "about": "About",
     "contact": "Contact",

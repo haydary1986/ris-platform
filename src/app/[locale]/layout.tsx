@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { ChatWidget } from '@/components/chat/chat-widget';
 import { routing } from '@/i18n/routing';
 import { siteUrl } from '@/lib/seo/site';
 import { createClient } from '@/lib/supabase/server';
@@ -104,6 +105,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
             <Header />
             <div className="flex flex-1 flex-col">{children}</div>
             <Footer />
+            <ChatWidget />
             <Toaster />
           </ThemeProvider>
         </NextIntlClientProvider>

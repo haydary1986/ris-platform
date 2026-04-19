@@ -89,6 +89,26 @@ const SERVICES: ServiceConfig[] = [
     ],
   },
   {
+    id: 'deepseek',
+    title: 'DeepSeek (AI Chat Assistant)',
+    titleAr: 'DeepSeek (مساعد محادثة ذكي)',
+    description:
+      'Powers the floating AI assistant that helps visitors find researchers and publications. Get an API key at platform.deepseek.com/api_keys.',
+    descriptionAr:
+      'يُشغّل المساعد الذكي العائم الذي يساعد الزوار على إيجاد الباحثين والمنشورات. احصل على مفتاح من platform.deepseek.com/api_keys.',
+    link: 'https://platform.deepseek.com/api_keys',
+    linkLabel: 'DeepSeek API Keys',
+    fields: [
+      {
+        key: 'integration.deepseek.api_key',
+        label: 'API Key',
+        labelAr: 'مفتاح API',
+        placeholder: 'sk-********',
+        secret: true,
+      },
+    ],
+  },
+  {
     id: 'scopus',
     title: 'Scopus API (Publication Import)',
     titleAr: 'Scopus API (استيراد المنشورات)',
