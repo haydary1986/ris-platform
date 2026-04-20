@@ -38,13 +38,19 @@ export default async function AdminsPage({ params }: Props) {
   const collegeMap = new Map(colleges.map((c) => [c.id, c]));
   const deptMap = new Map(departments.map((d) => [d.id, d]));
 
-  // Get emails from auth.users
+  // Get emails from auth.users. listUsers() defaults to perPage=50, so
+  // past 50 signups the tail falls off the map and rows show user_id
+  // prefixes instead of emails. Loop through pages until exhausted.
   const emailMap: Record<string, string> = {};
   try {
     const adminClient = createAdminClient();
-    const { data } = await adminClient.auth.admin.listUsers();
-    for (const user of data?.users ?? []) {
-      if (user.email) emailMap[user.id] = user.email;
+    for (let page = 1; page <= 20; page++) {
+      const { data } = await adminClient.auth.admin.listUsers({ page, perPage: 200 });
+      const users = data?.users ?? [];
+      for (const user of users) {
+        if (user.email) emailMap[user.id] = user.email;
+      }
+      if (users.length < 200) break;
     }
   } catch {}
 

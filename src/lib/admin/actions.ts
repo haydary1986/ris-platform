@@ -53,8 +53,15 @@ export async function addAdmin(
   // "permission denied for table admins".
   try {
     const adminClient = createAdminClient();
-    const { data } = await adminClient.auth.admin.listUsers();
-    const target = data?.users?.find((u) => u.email?.toLowerCase() === email.toLowerCase());
+    // Paginate in case the user sits past the 50-row default page.
+    const needle = email.toLowerCase();
+    let target: { id: string } | undefined;
+    for (let page = 1; page <= 20; page++) {
+      const { data } = await adminClient.auth.admin.listUsers({ page, perPage: 200 });
+      const users = data?.users ?? [];
+      target = users.find((u) => u.email?.toLowerCase() === needle);
+      if (target || users.length < 200) break;
+    }
     if (!target) return { ok: false, error: 'user_not_found — they must sign in first' };
 
     const { error } = await adminClient.from('admins').insert({
