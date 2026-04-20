@@ -6,6 +6,7 @@ import { UserMenu } from './user-menu';
 import { MobileNav } from './mobile-nav';
 import { CollegesMegaMenu, type CollegeWithDepts } from './colleges-mega-menu';
 import { CollegesMobileAccordion } from './colleges-mobile-accordion';
+import { NotificationBell } from './notification-bell';
 import { createClient } from '@/lib/supabase/server';
 
 interface NavLink {
@@ -149,6 +150,7 @@ export async function Header() {
         </nav>
 
         <div className="flex items-center gap-1">
+          {user ? <NotificationBell /> : null}
           <ThemeToggle />
           <LanguageSwitcher />
           <div className="hidden md:block">

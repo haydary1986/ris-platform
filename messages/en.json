@@ -95,6 +95,22 @@
       }
     }
   },
+  "push": {
+    "banner_title": "Stay in the loop",
+    "banner_body": "Get instant notifications for new research, announcements, and updates from AL-Turath University.",
+    "enable": "Enable notifications",
+    "later": "Not now",
+    "dismiss": "Dismiss",
+    "enabled": "Notifications enabled — you're all set.",
+    "denied": "Notifications are blocked in your browser. Unblock them in site settings and try again.",
+    "enable_failed": "Could not enable notifications. Please try again."
+  },
+  "notifications": {
+    "open": "Open notifications",
+    "title": "Notifications",
+    "subtitle": "Recent announcements from AL-Turath University.",
+    "empty": "No notifications yet."
+  },
   "chat": {
     "open": "Open AI assistant",
     "close": "Close",
@@ -361,6 +377,28 @@
   "admin": {
     "title": "Admin",
     "forbidden": "You do not have admin privileges.",
+    "push_page": {
+      "title": "Push notifications",
+      "subtitle": "Broadcast to every subscribed browser. {subs} active subscriptions.",
+      "not_configured": "VAPID keys are not configured. Add them in Integrations first.",
+      "compose_title": "Compose notification",
+      "label_title": "Title",
+      "label_body": "Message",
+      "label_url": "URL to open when clicked (optional)",
+      "label_target": "Audience",
+      "placeholder_title": "e.g. New research highlighted",
+      "placeholder_body": "Keep it short — under 140 characters works best.",
+      "target_all": "All languages",
+      "target_ar": "Arabic users only",
+      "target_en": "English users only",
+      "send": "Send broadcast",
+      "send_success": "Sent to {success} of {recipients} devices",
+      "send_failed": "Broadcast failed",
+      "total_subs": "{count} subscribed devices",
+      "history_title": "Recent broadcasts",
+      "history_empty": "No broadcasts yet.",
+      "history_stats": "{recipients} recipients · {success} delivered · {failure} failed · {locale}"
+    },
     "chat_page": {
       "title": "AI chat logs",
       "subtitle": "Every AI assistant conversation, so you can see what visitors ask and improve the product.",
@@ -391,7 +429,8 @@
       "duplicates": "Duplicate publications",
       "integrations": "Integrations",
       "branding": "Branding & Logo",
-      "chat": "AI chat logs"
+      "chat": "AI chat logs",
+      "notifications": "Notifications"
     },
     "dashboard": {
       "title": "Admin Dashboard",

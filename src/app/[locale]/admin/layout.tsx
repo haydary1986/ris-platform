@@ -26,6 +26,7 @@ const NAV_KEYS = [
   'retracted',
   'colleges',
   'chat',
+  'notifications',
 ] as const;
 
 export default async function AdminLayout({ children, params }: AdminLayoutProps) {

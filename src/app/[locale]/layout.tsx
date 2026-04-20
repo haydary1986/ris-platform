@@ -9,6 +9,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { ChatWidget } from '@/components/chat/chat-widget';
+import { PushPrompt } from '@/components/push/push-prompt';
 import { routing } from '@/i18n/routing';
 import { siteUrl } from '@/lib/seo/site';
 import { createClient } from '@/lib/supabase/server';
@@ -106,6 +107,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
             <div className="flex flex-1 flex-col">{children}</div>
             <Footer />
             <ChatWidget />
+            <PushPrompt />
             <Toaster />
           </ThemeProvider>
         </NextIntlClientProvider>

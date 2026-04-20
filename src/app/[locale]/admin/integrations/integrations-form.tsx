@@ -122,6 +122,36 @@ const SERVICES: ServiceConfig[] = [
     ],
   },
   {
+    id: 'push',
+    title: 'Web Push Notifications (VAPID)',
+    titleAr: 'إشعارات الويب (VAPID)',
+    description:
+      'Send browser push notifications to subscribed users. Generate a keypair once with `npx web-push generate-vapid-keys` and paste both halves here. Subject should be a mailto: URL your users can reach — Google/Mozilla push services require it.',
+    descriptionAr:
+      'أرسل إشعارات متصفح للمستخدمين المشتركين. ولّد زوج مفاتيح مرة واحدة بـ `npx web-push generate-vapid-keys` والصقهما هنا. Subject يجب أن يكون mailto: فعّال — شرط من خدمات Google/Mozilla push.',
+    fields: [
+      {
+        key: 'integration.push.vapid_public',
+        label: 'VAPID Public Key',
+        labelAr: 'المفتاح العام VAPID',
+        placeholder: 'BA77zN60...',
+      },
+      {
+        key: 'integration.push.vapid_private',
+        label: 'VAPID Private Key',
+        labelAr: 'المفتاح الخاص VAPID',
+        placeholder: '********',
+        secret: true,
+      },
+      {
+        key: 'integration.push.vapid_subject',
+        label: 'Contact Subject (mailto:)',
+        labelAr: 'جهة الاتصال (mailto:)',
+        placeholder: 'mailto:admin@uoturath.edu.iq',
+      },
+    ],
+  },
+  {
     id: 'scopus',
     title: 'Scopus API (Publication Import)',
     titleAr: 'Scopus API (استيراد المنشورات)',

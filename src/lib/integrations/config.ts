@@ -64,3 +64,24 @@ export async function isDeepseekEnabled(): Promise<boolean> {
   const raw = await getIntegrationValue('integration.deepseek.enabled');
   return raw.toLowerCase() === 'true';
 }
+
+// Web Push VAPID keys. Public key is safe to expose to clients; private
+// key must stay server-side.
+export async function getVapidPublicKey(): Promise<string> {
+  return (
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ||
+    process.env.VAPID_PUBLIC_KEY ||
+    (await getIntegrationValue('integration.push.vapid_public'))
+  );
+}
+
+export async function getVapidPrivateKey(): Promise<string> {
+  return (
+    process.env.VAPID_PRIVATE_KEY || (await getIntegrationValue('integration.push.vapid_private'))
+  );
+}
+
+export async function getVapidSubject(): Promise<string> {
+  const raw = await getIntegrationValue('integration.push.vapid_subject');
+  return raw || process.env.VAPID_SUBJECT || 'mailto:admin@uoturath.edu.iq';
+}
