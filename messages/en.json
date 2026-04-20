@@ -32,10 +32,29 @@
   },
   "landing": {
     "hero": {
-      "title": "RIS — AL-Turath University Researcher Directory",
-      "tagline": "Discover the research, publications, and collaborations of our scholars.",
-      "cta_primary": "Explore researchers",
-      "cta_secondary": "Learn more"
+      "title": "AL-Turath University Researcher Directory & Academic Profiles",
+      "tagline": "A public researcher directory for AL-Turath University — every faculty member has an indexed academic profile with publications, citations, and a one-click CV.",
+      "cta_primary": "Browse researchers",
+      "cta_secondary": "View analytics"
+    },
+    "features": {
+      "title": "Everything a research office needs, in one place",
+      "subtitle": "Three tools that make your faculty discoverable, citable, and easy to collaborate with.",
+      "directory": {
+        "title": "Public Researcher Directory",
+        "body": "Search and filter every AL-Turath scholar by college, department, research interest, or SDG. Bilingual (Arabic / English), fast, mobile-ready, and optimised for Google Scholar and Google search.",
+        "link": "Explore the directory"
+      },
+      "academic_profile": {
+        "title": "Academic Profile Pages",
+        "body": "Every researcher gets a citable public profile — bio, interests, publications with DOIs, Scopus / WoS / OpenAlex metrics, SDG alignment, and social links. Indexed by Google as Person + ProfilePage structured data.",
+        "link": "See a sample profile"
+      },
+      "cv_generator": {
+        "title": "One-Click CV Generator",
+        "body": "Print-ready, print-styled CVs generated from the same data researchers maintain for their profile. No templates, no separate upkeep — your directory and your CV stay in sync automatically.",
+        "link": "How CV export works"
+      }
     },
     "stats": {
       "title": "Research at a glance",

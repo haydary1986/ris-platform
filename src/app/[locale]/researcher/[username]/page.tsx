@@ -42,16 +42,34 @@ export async function generateMetadata({ params }: ResearcherPageProps): Promise
   const collegeStr = college ? (typedLocale === 'ar' ? college.name_ar : college.name_en) : null;
 
   const pageTitle = [name, titleStr, collegeStr].filter(Boolean).join(' — ');
-  const description = [
-    name,
-    titleStr,
-    collegeStr ? `at ${collegeStr}` : null,
-    'AL-Turath University.',
-    publications.length > 0 ? `${publications.length} publications.` : null,
-    profile.scopus_h_index !== null ? `h-index ${profile.scopus_h_index}.` : null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  // Frame the page as an academic profile explicitly — both for Google's
+  // snippet and for the share card on social. The word "academic profile"
+  // is the primary keyword we want this page to rank for alongside the
+  // researcher's name.
+  const isAr = typedLocale === 'ar';
+  const description = isAr
+    ? [
+        `الملف الأكاديمي للدكتور/الدكتورة ${name}`,
+        titleStr,
+        collegeStr ? `— ${collegeStr}` : null,
+        '— جامعة التراث.',
+        publications.length > 0 ? `${publications.length} منشور بحثي.` : null,
+        profile.scopus_h_index !== null ? `H-index ${profile.scopus_h_index}.` : null,
+        'السيرة الذاتية الأكاديمية، الاهتمامات البحثية، المنشورات، والاقتباسات.',
+      ]
+        .filter(Boolean)
+        .join(' ')
+    : [
+        `Academic profile of ${name}`,
+        titleStr ? `— ${titleStr}` : null,
+        collegeStr ? `at ${collegeStr},` : null,
+        'AL-Turath University.',
+        publications.length > 0 ? `${publications.length} publications.` : null,
+        profile.scopus_h_index !== null ? `H-index ${profile.scopus_h_index}.` : null,
+        'Bio, research interests, publications, and citations. Download CV.',
+      ]
+        .filter(Boolean)
+        .join(' ');
 
   const path = `/researcher/${username}`;
   const alts = buildLanguageAlternates(path);
