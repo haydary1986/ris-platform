@@ -130,9 +130,16 @@ export default async function AboutPage({ params }: AboutPageProps) {
 
         <div className="mt-6 grid gap-6 sm:grid-cols-[auto_1fr]">
           <div className="flex sm:flex-col sm:items-start">
-            <div className="ring-primary/30 bg-primary/10 flex size-20 items-center justify-center rounded-full ring-2 sm:size-24">
-              <span className="text-primary text-2xl font-bold">ع.ع</span>
-            </div>
+            {/* Plain <img> — same pattern as the Header logo. Avoids
+                configuring next.config.ts remotePatterns for a single
+                source, and the upstream file is already optimised webp. */}
+            <img
+              src="https://uoturath.edu.iq/wp-content/uploads/2024/10/%D8%B1%D8%A6%D9%8A%D8%B3-%D9%85%D8%AC%D9%84%D8%B3-%D8%A7%D9%84%D8%A7%D9%85%D9%86%D8%A7%D8%A1-%D8%A7%D9%84%D8%A3%D8%B3%D8%AA%D8%A7%D8%B0-%D8%B9%D9%84%D9%8A-%D8%A7%D9%84%D8%B9%D9%83%D9%8A%D9%84%D9%8A.png.webp"
+              alt={t('chairman.name')}
+              loading="lazy"
+              decoding="async"
+              className="ring-primary/30 size-20 rounded-full object-cover ring-2 sm:size-28"
+            />
             <div className="ms-4 sm:ms-0 sm:mt-3">
               <p className="text-base font-semibold">{t('chairman.name')}</p>
               <p className="text-muted-foreground text-sm">{t('chairman.title')}</p>
