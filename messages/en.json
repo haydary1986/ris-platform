@@ -114,6 +114,123 @@
       }
     }
   },
+  "about": {
+    "title": "About RIS",
+    "lead": "The AL-Turath University Research Information System — a public directory of faculty members, an official academic profile page for every researcher, and a one-click CV generator built on top of the same data.",
+    "pillars_title": "Three pillars",
+    "pillars": {
+      "directory": {
+        "title": "Researcher Directory",
+        "body": "A public, filterable directory of every faculty member, sortable by college, department, and research interest."
+      },
+      "profile": {
+        "title": "Academic Profile",
+        "body": "Every researcher has a citable public profile with biography, publications, metrics, and academic accounts."
+      },
+      "cv": {
+        "title": "CV Generator",
+        "body": "Print-ready CV export from the same profile data — no separate templates, no duplicate upkeep."
+      }
+    },
+    "data_title": "Data sources",
+    "data_body": "Publications and metrics are imported from official sources: Google Scholar CSV, ORCID OAuth, Scopus, Web of Science, and OpenAlex. Each researcher maintains their profile data; admins manage platform-wide settings.",
+    "contact_title": "Contact",
+    "contact_body": "For questions about the platform or institutional needs, reach us at"
+  },
+  "contact": {
+    "title": "Contact us",
+    "lead": "We welcome questions about the directory, requests to onboard a researcher, or research partnerships.",
+    "email_label": "Email",
+    "web_label": "University website",
+    "address_label": "Address",
+    "address_body": "AL-Turath University, Baghdad, Iraq."
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "updated_at": "Last updated: 2026-04-21",
+    "lead": "RIS respects your privacy. This page explains what we collect, why, and what rights you have.",
+    "sections": {
+      "data_collected": {
+        "title": "What we collect",
+        "body": "When you sign in with your institutional email, we store: name, email, university ID. When you fill your profile: bio, publications, interests. When you use the AI assistant: conversation text.\n\nWe do not collect payment or financial information."
+      },
+      "how_used": {
+        "title": "How we use data",
+        "body": "• Display your public profile in the directory (if you opt in).\n• Generate and export your CV.\n• Improve the platform statistically (aggregated, non-identifying data).\n• Respond to your inquiries if you contact us."
+      },
+      "public_profiles": {
+        "title": "Public profiles",
+        "body": "If you enable public visibility, your profile becomes publicly available and indexable by search engines. You can turn visibility off at any time from Manage Profile."
+      },
+      "third_parties": {
+        "title": "Third-party services",
+        "body": "We use: Google OAuth for sign-in, Supabase for hosting, Scopus / ORCID / OpenAlex for publication data, DeepSeek for the AI assistant. Each service is subject to its own privacy policy."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "body": "We use strictly necessary cookies for authentication sessions. No tracking, analytics, or advertising cookies."
+      },
+      "retention": {
+        "title": "Data retention",
+        "body": "Profile data is kept while you are a member. On account deletion, we erase all personal data within 30 days — except for publications publicly indexed by external sources."
+      },
+      "rights": {
+        "title": "Your rights",
+        "body": "• Request a copy of your data.\n• Correct inaccuracies.\n• Delete your account and data.\n• Pause or permanently hide your public profile."
+      },
+      "contact": {
+        "title": "Privacy contact",
+        "body": "For any data-related question or request, email: research@uoturath.edu.iq"
+      }
+    }
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "updated_at": "Last updated: 2026-04-21",
+    "lead": "By using RIS you agree to these terms.",
+    "sections": {
+      "acceptance": {
+        "title": "Acceptance",
+        "body": "Accessing or using the platform means you accept these terms and the privacy policy. If you disagree, do not use the platform."
+      },
+      "use": {
+        "title": "Permitted use",
+        "body": "The platform is intended to serve the academic community of AL-Turath University. Public browsing, search, and personal CV export are permitted."
+      },
+      "accounts": {
+        "title": "Accounts",
+        "body": "You need an @uoturath.edu.iq institutional email to create an account. You are responsible for account security. Notify us immediately if you detect unauthorised use."
+      },
+      "content": {
+        "title": "Researcher content",
+        "body": "You are responsible for the accuracy of data you enter in your profile. You grant the university the right to display your data publicly when you enable visibility."
+      },
+      "intellectual_property": {
+        "title": "Intellectual property",
+        "body": "The platform source code is owned by its original developer Haydar AL-IESSA — all rights reserved. Copying or redistribution is prohibited without written permission. See the LICENSE file in the repository for the full terms."
+      },
+      "prohibited": {
+        "title": "Prohibited uses",
+        "body": "• Impersonating another researcher.\n• Attempts to breach or disrupt the platform.\n• Posting abusive or unlawful content.\n• Commercial use without written permission."
+      },
+      "availability": {
+        "title": "Availability & changes",
+        "body": "We may modify or suspend any part of the service without prior notice, particularly for maintenance or development."
+      },
+      "changes": {
+        "title": "Changes to these terms",
+        "body": "We may update these terms from time to time. Continued use after changes means you accept the updated terms."
+      },
+      "law": {
+        "title": "Governing law",
+        "body": "These terms are governed by Iraqi law. Any dispute is referred to the competent Iraqi courts in Baghdad."
+      },
+      "contact": {
+        "title": "Contact about terms",
+        "body": "For any question, email: research@uoturath.edu.iq"
+      }
+    }
+  },
   "push": {
     "banner_title": "Stay in the loop",
     "banner_body": "Get instant notifications for new research, announcements, and updates from AL-Turath University.",
@@ -178,12 +295,16 @@
   },
   "footer": {
     "about": "About",
+    "about_section": "About & Legal",
     "contact": "Contact",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "address": "AL-Turath University, Iraq",
+    "explore": "Explore",
+    "colleges": "Colleges",
+    "brand_pitch": "The official researcher directory of AL-Turath University — academic profiles, publication tracking, and one-click CV, all in one place.",
+    "address": "Baghdad, Iraq",
     "copyright": "© {year} AL-Turath University. All rights reserved.",
-    "colleges": "Colleges"
+    "built_by": "Built & maintained by Haydar AL-IESSA"
   },
   "auth": {
     "sign_in": {
