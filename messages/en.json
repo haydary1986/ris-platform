@@ -115,27 +115,91 @@
     }
   },
   "about": {
-    "title": "About RIS",
-    "lead": "The AL-Turath University Research Information System — a public directory of faculty members, an official academic profile page for every researcher, and a one-click CV generator built on top of the same data.",
-    "pillars_title": "Three pillars",
+    "eyebrow": "About the platform",
+    "title": "RIS — the research face of AL-Turath University",
+    "lead": "The Research Information System is the official digital home of AL-Turath University's scholarly output. Every faculty member gets a citable academic profile, the public gets a searchable directory of our researchers, and a one-click CV generator keeps everyone's record up to date without duplicate work.",
+    "chairman": {
+      "eyebrow": "Chairman's letter",
+      "heading": "A word from the Chairman of the Board of Trustees",
+      "name": "Prof. Ali Al-Akeeli",
+      "title": "Chairman of the Board of Trustees",
+      "institution": "AL-Turath University — Baghdad, Iraq",
+      "paragraph_1": "At AL-Turath University, our mission is rooted in a steady vision: research is not confined within laboratory walls — it is a bridge that connects the university to society and to the world. From this vision was born the Research Information System, to give every faculty member at our university an official, citable academic profile, and to make our scholarly achievements visible to every researcher, student, or partner anywhere in the world.",
+      "paragraph_2": "We believe the quality of a university is measured by the quality of its researchers and the impact of their work on the advancement of knowledge. That is why we have invested in this platform to be the digital face of our scientific output, and to encourage every researcher to document their work, connect with peers, and inspire those around them.",
+      "paragraph_3": "I invite every member of our university, and every visitor to this platform, to discover what our researchers are producing, to connect with them, and to benefit from their experience. AL-Turath University continues in its mission: building knowledge and serving society.",
+      "signature": "— Prof. Ali Al-Akeeli"
+    },
+    "impact": {
+      "eyebrow": "Research impact",
+      "title": "Our scholarship, by the numbers",
+      "lead": "Live figures drawn from the directory database and from OpenAlex. Citation and h-index values are institution-wide and refresh hourly.",
+      "source_note": "Citations, h-index, and publication counts are aggregated from OpenAlex (institution ID I2801460691) and refresh every hour.",
+      "metrics": {
+        "researchers": "Researchers",
+        "colleges": "Colleges",
+        "departments": "Departments",
+        "publications": "Publications",
+        "citations": "Citations",
+        "h_index": "Institutional H-index"
+      }
+    },
+    "pillars_eyebrow": "How it works",
+    "pillars_title": "Three pillars, one data model",
     "pillars": {
       "directory": {
-        "title": "Researcher Directory",
-        "body": "A public, filterable directory of every faculty member, sortable by college, department, and research interest."
+        "title": "Public Researcher Directory",
+        "body": "A searchable, filterable directory of every faculty member — by college, department, or research interest."
       },
       "profile": {
         "title": "Academic Profile",
-        "body": "Every researcher has a citable public profile with biography, publications, metrics, and academic accounts."
+        "body": "Every researcher has a citable public profile with biography, publications, citation metrics, and academic accounts."
       },
       "cv": {
         "title": "CV Generator",
         "body": "Print-ready CV export from the same profile data — no separate templates, no duplicate upkeep."
       }
     },
+    "timeline": {
+      "eyebrow": "Timeline",
+      "title": "How we got here",
+      "lead": "Key milestones in the platform's journey, from first commit to the features you see today.",
+      "items": {
+        "2024": {
+          "date": "Late 2024",
+          "title": "Vision",
+          "body": "AL-Turath University's leadership identifies the need for a single, trusted platform to showcase faculty research output and protect the university's scholarly identity online."
+        },
+        "2025_q1": {
+          "date": "Early 2025",
+          "title": "Requirements & architecture",
+          "body": "Full requirements catalogue drafted; bilingual (Arabic / English) scope, SEO-first architecture, and Supabase + Next.js stack chosen."
+        },
+        "2025_q2": {
+          "date": "Late 2025",
+          "title": "Platform build",
+          "body": "Core directory, researcher profiles, publication import from Scopus / ORCID / OpenAlex, and the CV generator shipped."
+        },
+        "2026_q1": {
+          "date": "Q1 2026",
+          "title": "Public launch",
+          "body": "ris.uoturath.edu.iq goes live. First cohort of researchers onboarded, SDG alignment added, college and department hub pages indexed."
+        },
+        "2026_q2": {
+          "date": "Q2 2026",
+          "title": "AI & engagement",
+          "body": "DeepSeek-powered AI research assistant, Web Push notifications with admin broadcast, Activities tab for editorial / conference / membership records, and a richer Chairman's letter on the About page."
+        },
+        "future": {
+          "date": "Next",
+          "title": "What's coming",
+          "body": "Similar-researcher recommendations via semantic search, a collaboration network graph, per-researcher analytics, and expanded email notifications."
+        }
+      }
+    },
     "data_title": "Data sources",
     "data_body": "Publications and metrics are imported from official sources: Google Scholar CSV, ORCID OAuth, Scopus, Web of Science, and OpenAlex. Each researcher maintains their profile data; admins manage platform-wide settings.",
     "contact_title": "Contact",
-    "contact_body": "For questions about the platform or institutional needs, reach us at"
+    "contact_body": "For questions about the platform or institutional partnerships, reach us at"
   },
   "contact": {
     "title": "Contact us",

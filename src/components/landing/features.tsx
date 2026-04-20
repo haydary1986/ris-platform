@@ -1,34 +1,23 @@
 import { FileText, Globe, UserCircle2 } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
-import { createClient } from '@/lib/supabase/server';
 
 // The three-feature landing section. Each card reads like a mini SEO
 // page with the relevant anchor text ("researcher directory", "academic
 // profile", "CV generator") so Google indexes the homepage with those
-// feature keywords prominently. The CV card deep-links into a real
-// researcher's CV page so the link stays alive even as the directory
-// grows — we pick whoever sits on top of the h-index ranking.
+// feature keywords prominently.
+//
+// SAMPLE_USERNAME is a deliberate, stable anchor — the platform owner's
+// own profile. Hard-coding keeps the link predictable across deploys
+// and lets us pick the most complete profile instead of whatever row
+// happens to top the h-index ordering on a given day.
+const SAMPLE_USERNAME = 'hayder-abdulameer';
 
 export async function Features() {
   const t = await getTranslations('landing.features');
 
-  let sampleUsername = '';
-  try {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from('researchers_public')
-      .select('username')
-      .order('scopus_h_index', { ascending: false, nullsFirst: false })
-      .limit(1)
-      .maybeSingle();
-    if (data?.username) sampleUsername = data.username;
-  } catch {
-    /* directory empty or Supabase offline — fall back to list */
-  }
-
-  const profileLink = sampleUsername ? `/researcher/${sampleUsername}` : '/researchers';
-  const cvLink = sampleUsername ? `/researcher/${sampleUsername}/cv` : '/researchers';
+  const profileLink = `/researcher/${SAMPLE_USERNAME}` as const;
+  const cvLink = `/researcher/${SAMPLE_USERNAME}/cv` as const;
 
   const cards = [
     {
@@ -43,14 +32,14 @@ export async function Features() {
       title: t('academic_profile.title'),
       body: t('academic_profile.body'),
       link: t('academic_profile.link'),
-      href: profileLink as '/researchers' | `/researcher/${string}`,
+      href: profileLink,
     },
     {
       icon: FileText,
       title: t('cv_generator.title'),
       body: t('cv_generator.body'),
       link: t('cv_generator.link'),
-      href: cvLink as '/researchers' | `/researcher/${string}/cv`,
+      href: cvLink,
     },
   ];
 
