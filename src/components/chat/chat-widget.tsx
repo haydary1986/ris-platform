@@ -64,26 +64,32 @@ export function ChatWidget() {
 
   // Probe backend config + current auth state in parallel. Logged-in users
   // get a dedicated /chat page via the user menu, so the floating bubble
-  // only renders for anonymous visitors. We also re-probe whenever the tab
-  // regains visibility, so an admin toggling the assistant on or off is
-  // reflected without requiring a reload.
+  // only renders for anonymous visitors. Re-probe:
+  //   * on mount
+  //   * when the tab regains focus (visibilitychange)
+  //   * every 2 minutes while the tab is open
+  //   * whenever the user opens the widget
+  // so an admin toggling the assistant on or off is reflected in every
+  // open tab within ~2 minutes — without reload.
+  const probeRef = useRef<(() => Promise<void>) | null>(null);
   useEffect(() => {
     let cancelled = false;
-    const probe = () =>
-      fetch('/api/chat', { method: 'GET', cache: 'no-store' })
-        .then((r) => r.json())
-        .then((j: { available?: boolean }) => {
-          if (!cancelled) setAvailable(Boolean(j.available));
-        })
-        .catch(() => {
-          if (!cancelled) setAvailable(false);
-        });
-
-    probe();
+    const probe = async () => {
+      try {
+        const r = await fetch('/api/chat', { method: 'GET', cache: 'no-store' });
+        const j = (await r.json()) as { available?: boolean };
+        if (!cancelled) setAvailable(Boolean(j.available));
+      } catch {
+        if (!cancelled) setAvailable(false);
+      }
+    };
+    probeRef.current = probe;
+    void probe();
     const onVisible = () => {
       if (document.visibilityState === 'visible') void probe();
     };
     document.addEventListener('visibilitychange', onVisible);
+    const interval = window.setInterval(() => void probe(), 120_000);
 
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
@@ -115,6 +121,7 @@ export function ChatWidget() {
     return () => {
       cancelled = true;
       clearTimeout(timer);
+      clearInterval(interval);
       document.removeEventListener('visibilitychange', onVisible);
     };
   }, []);
@@ -267,7 +274,10 @@ export function ChatWidget() {
         {!open ? (
           <button
             type="button"
-            onClick={() => setOpen(true)}
+            onClick={() => {
+              void probeRef.current?.();
+              setOpen(true);
+            }}
             aria-label={t('coming_soon.open')}
             className={`bg-primary text-primary-foreground hover:bg-primary/90 fixed bottom-4 ${side} z-50 flex size-14 items-center justify-center rounded-full shadow-lg transition hover:scale-105`}
           >
