@@ -24,6 +24,7 @@
     "sign_in": "Sign in",
     "sign_out": "Sign out",
     "manage_profile": "Manage profile",
+    "ai_chat": "AI assistant",
     "admin": "Admin"
   },
   "landing": {
@@ -116,6 +117,15 @@
       "title": "AI Assistant",
       "heading": "Launching very soon",
       "body": "Our AI research assistant will help you find the right researcher by field or topic in one message. Check back shortly."
+    },
+    "page": {
+      "title": "AI Research Assistant",
+      "subtitle": "Ask about AL-Turath researchers and the directory. Your conversations are saved.",
+      "new_conversation": "New conversation",
+      "no_conversations": "No conversations yet.",
+      "untitled": "Untitled",
+      "unavailable_title": "Assistant is currently offline",
+      "unavailable_body": "An administrator will enable it shortly. Please check back later."
     }
   },
   "footer": {
@@ -313,6 +323,21 @@
   "admin": {
     "title": "Admin",
     "forbidden": "You do not have admin privileges.",
+    "chat_page": {
+      "title": "AI chat logs",
+      "subtitle": "Every AI assistant conversation, so you can see what visitors ask and improve the product.",
+      "conversations": "Conversations",
+      "stats": "{total} conversations · {users} signed-in users",
+      "empty": "No conversations yet.",
+      "user": "Signed in",
+      "signed_in": "User",
+      "anonymous": "Guest",
+      "untitled": "Untitled",
+      "pick_conversation": "Select a conversation",
+      "pick_conversation_body": "Choose one from the list to see its messages.",
+      "no_messages": "No messages.",
+      "privacy_note": "Messages are retained to improve the assistant. Remind users not to share sensitive data."
+    },
     "nav": {
       "dashboard": "Dashboard",
       "setup": "Setup guide",
@@ -327,7 +352,8 @@
       "colleges": "Colleges & departments",
       "duplicates": "Duplicate publications",
       "integrations": "Integrations",
-      "branding": "Branding & Logo"
+      "branding": "Branding & Logo",
+      "chat": "AI chat logs"
     },
     "dashboard": {
       "title": "Admin Dashboard",

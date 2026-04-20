@@ -97,8 +97,19 @@ export async function updateSetting(key: string, value: unknown): Promise<Action
   if (!(await requireAdmin())) return { ok: false, error: 'forbidden' };
   const supabase = createAdminClient();
   const jsonValue = typeof value === 'string' ? value : JSON.stringify(value);
-  const { error } = await supabase.from('app_settings').update({ value: jsonValue }).eq('key', key);
+  // UPSERT so rows for brand-new integration keys get created on first save
+  // instead of silently failing (UPDATE matches 0 rows → admin thinks it
+  // worked but nothing was written).
+  const { error } = await supabase
+    .from('app_settings')
+    .upsert({ key, value: jsonValue }, { onConflict: 'key' });
   if (error) return { ok: false, error: error.message };
+  // Integration values are served out of an in-memory cache with a 60s
+  // TTL; flush the entry so the next read picks up the new value.
+  if (key.startsWith('integration.')) {
+    const { invalidateIntegrationCache } = await import('@/lib/integrations/config');
+    invalidateIntegrationCache(key);
+  }
   revalidatePath('/[locale]/admin', 'layout');
   return { ok: true };
 }

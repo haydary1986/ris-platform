@@ -25,6 +25,17 @@ export async function getIntegrationValue(key: string): Promise<string> {
   }
 }
 
+// Invalidate the in-memory cache for a specific key (or all keys). Called
+// from updateSetting so toggles take effect without waiting for the 60s
+// TTL to expire.
+export function invalidateIntegrationCache(key?: string): void {
+  if (key) {
+    delete cache[key];
+  } else {
+    for (const k of Object.keys(cache)) delete cache[k];
+  }
+}
+
 export async function getOrcidClientId(): Promise<string> {
   return process.env.ORCID_CLIENT_ID || (await getIntegrationValue('integration.orcid.client_id'));
 }

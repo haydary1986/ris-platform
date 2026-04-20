@@ -5,6 +5,7 @@ import { MessageCircle, Rocket, Send, Sparkles, X, Loader2 } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { createClient } from '@/lib/supabase/client';
 
 interface ChatMessage {
   id: string;
@@ -16,8 +17,8 @@ function newId(): string {
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
 
-// Convert a small subset of markdown (bold + links) into safe HTML nodes.
-// DeepSeek tends to reply with bullets + [Name](url) which is all we need.
+// Very small markdown pass: escape HTML, render **bold** and [label](url).
+// DeepSeek replies use little more than that.
 function renderMarkdown(text: string): { __html: string } {
   const escaped = text
     .replace(/&/g, '&amp;')
@@ -30,27 +31,43 @@ function renderMarkdown(text: string): { __html: string } {
       `<a href="${href}" class="text-primary underline" target="${href.startsWith('/') ? '_self' : '_blank'}" rel="noopener">${label}</a>`,
   );
   const withBold = withLinks.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-  const withBreaks = withBold.replace(/\n/g, '<br/>');
-  return { __html: withBreaks };
+  return { __html: withBold.replace(/\n/g, '<br/>') };
+}
+
+function getSessionId(): string {
+  if (typeof window === 'undefined') return '';
+  let id = window.localStorage.getItem('ris.chat.session_id');
+  if (!id) {
+    id = crypto.randomUUID();
+    window.localStorage.setItem('ris.chat.session_id', id);
+  }
+  return id;
 }
 
 export function ChatWidget() {
   const locale = useLocale() as 'ar' | 'en';
   const t = useTranslations('chat');
-  // null = still checking, false = coming-soon (no API key), true = fully wired
   const [available, setAvailable] = useState<boolean | null>(null);
+  const [authed, setAuthed] = useState<boolean | null>(null);
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
+  // Probe backend config + current auth state in parallel. Logged-in users
+  // get a dedicated /chat page via the user menu, so the floating bubble
+  // only renders for anonymous visitors.
   useEffect(() => {
-    fetch('/api/chat', { method: 'GET' })
+    fetch('/api/chat', { method: 'GET', cache: 'no-store' })
       .then((r) => r.json())
       .then((j: { available?: boolean }) => setAvailable(Boolean(j.available)))
       .catch(() => setAvailable(false));
+
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setAuthed(Boolean(data.user)));
   }, []);
 
   useEffect(() => {
@@ -65,8 +82,7 @@ export function ChatWidget() {
 
     const userMsg: ChatMessage = { id: newId(), role: 'user', content: prompt };
     const assistantMsg: ChatMessage = { id: newId(), role: 'assistant', content: '' };
-    const history = [...messages, userMsg];
-    setMessages([...history, assistantMsg]);
+    setMessages((m) => [...m, userMsg, assistantMsg]);
     setInput('');
     setStreaming(true);
 
@@ -79,20 +95,18 @@ export function ChatWidget() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           locale,
-          messages: history.map(({ role, content }) => ({ role, content })),
+          message: prompt,
+          conversationId,
+          sessionId: getSessionId(),
         }),
         signal: abort.signal,
       });
 
       if (!res.ok || !res.body) {
         const json = (await res.json().catch(() => ({}))) as { error?: string };
-        if (json.error === 'rate_limited') {
-          toast.error(t('errors.rate_limited'));
-        } else if (json.error === 'not_configured') {
-          toast.error(t('errors.not_configured'));
-        } else {
-          toast.error(t('errors.generic'));
-        }
+        if (json.error === 'rate_limited') toast.error(t('errors.rate_limited'));
+        else if (json.error === 'not_configured') toast.error(t('errors.not_configured'));
+        else toast.error(t('errors.generic'));
         setMessages((m) => m.filter((msg) => msg.id !== assistantMsg.id));
         return;
       }
@@ -115,7 +129,14 @@ export function ChatWidget() {
           if (!eventLine || !dataLine) continue;
           const type = eventLine.slice(6).trim();
           const payload = dataLine.slice(5).trim();
-          if (type === 'delta') {
+          if (type === 'meta') {
+            try {
+              const { conversationId: id } = JSON.parse(payload) as { conversationId?: string };
+              if (id) setConversationId(id);
+            } catch {
+              /* ignore */
+            }
+          } else if (type === 'delta') {
             try {
               const { text } = JSON.parse(payload) as { text?: string };
               if (text) {
@@ -154,15 +175,17 @@ export function ChatWidget() {
     }
   }
 
-  // Still probing — render nothing to avoid a flicker.
-  if (available === null) return null;
+  // Avoid a flash during initial probe.
+  if (available === null || authed === null) return null;
+
+  // Authenticated users have their own /chat page reached from the user
+  // menu — don't clutter their screen with a floating bubble too.
+  if (authed) return null;
 
   const side = locale === 'ar' ? 'left-4' : 'right-4';
-  const panelSide = locale === 'ar' ? 'left-4' : 'right-4';
 
-  // Coming-soon mode: the API key isn't configured yet, so we tease the
-  // feature instead of hiding the icon. Clicking opens a small panel that
-  // says it's launching soon.
+  // Coming-soon mode: the API key isn't configured or admin disabled the
+  // assistant. Show the icon + a teaser panel.
   if (!available) {
     return (
       <>
@@ -180,7 +203,7 @@ export function ChatWidget() {
           </button>
         ) : (
           <div
-            className={`bg-background fixed bottom-4 ${panelSide} z-50 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-xl border shadow-2xl`}
+            className={`bg-background fixed bottom-4 ${side} z-50 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-xl border shadow-2xl`}
             role="dialog"
             aria-label={t('coming_soon.title')}
           >
@@ -224,7 +247,7 @@ export function ChatWidget() {
         </button>
       ) : (
         <div
-          className={`bg-background fixed bottom-4 ${panelSide} z-50 flex w-[min(22rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-xl border shadow-2xl`}
+          className={`bg-background fixed bottom-4 ${side} z-50 flex w-[min(22rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-xl border shadow-2xl`}
           style={{ height: 'min(32rem, calc(100vh - 6rem))' }}
           role="dialog"
           aria-label={t('title')}

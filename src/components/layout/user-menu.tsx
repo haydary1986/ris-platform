@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { LogIn, LogOut, User as UserIcon, Shield } from 'lucide-react';
+import { LogIn, LogOut, User as UserIcon, Shield, Sparkles } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -57,6 +57,10 @@ export function UserMenu({ user, isAdmin }: UserMenuProps) {
         <DropdownMenuItem render={<Link href="/manage-profile" />}>
           <UserIcon className="size-4" />
           {tNav('manage_profile')}
+        </DropdownMenuItem>
+        <DropdownMenuItem render={<Link href="/chat" />}>
+          <Sparkles className="size-4" />
+          {tNav('ai_chat')}
         </DropdownMenuItem>
         {isAdmin ? (
           <DropdownMenuItem render={<Link href="/admin" />}>
