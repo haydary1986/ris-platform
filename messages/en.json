@@ -414,6 +414,8 @@
       "scopus_citations": "Scopus citations: {n}",
       "wos_citations": "WoS citations: {n}",
       "scholar_citations": "Scholar citations: {n}",
+      "influential_citations": "{n} influential",
+      "tldr": "TLDR",
       "empty": "No publications recorded yet."
     },
     "projects": {
@@ -602,6 +604,14 @@
       "history_title": "Recent broadcasts",
       "history_empty": "No broadcasts yet.",
       "history_stats": "{recipients} recipients · {success} delivered · {failure} failed · {locale}"
+    },
+    "enrich": {
+      "run": "Enrich now",
+      "progress": "Examined {examined} · enriched {enriched}…",
+      "done": "Done. Examined {examined}, enriched {enriched}.",
+      "partial": "Batch limit reached. Examined {examined}, enriched {enriched}. Click again to continue.",
+      "error_network": "Network error. Check your connection and try again.",
+      "error_generic": "Enrichment failed. See server logs."
     },
     "chat_page": {
       "title": "AI chat logs",

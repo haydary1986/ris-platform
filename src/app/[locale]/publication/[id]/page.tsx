@@ -10,6 +10,7 @@ import { Link } from '@/i18n/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { JsonLd } from '@/components/seo/json-ld';
+import { Sparkles, Star } from 'lucide-react';
 
 export const revalidate = 3600;
 
@@ -169,7 +170,25 @@ export default async function PublicationPage({ params }: Props) {
             {pub.scopus_citations} citation{pub.scopus_citations !== 1 ? 's' : ''}
           </Badge>
         )}
+        {pub.influential_citations != null && pub.influential_citations > 0 && (
+          <Badge
+            variant="outline"
+            className="border-amber-400/60 bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400"
+          >
+            <Star className="size-3 fill-current" />
+            {pub.influential_citations} influential
+          </Badge>
+        )}
       </div>
+
+      {pub.tldr ? (
+        <div className="bg-muted/40 flex gap-2 rounded-md border p-3 text-sm leading-relaxed">
+          <Sparkles className="text-primary mt-0.5 size-4 shrink-0" aria-hidden />
+          <p>
+            <span className="text-primary font-semibold">TLDR:</span> {pub.tldr}
+          </p>
+        </div>
+      ) : null}
 
       {pub.keywords?.length ? (
         <div className="flex flex-wrap gap-1">

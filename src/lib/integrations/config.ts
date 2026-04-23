@@ -51,6 +51,16 @@ export async function getScopusApiKey(): Promise<string> {
   return process.env.SCOPUS_API_KEY || (await getIntegrationValue('integration.scopus.api_key'));
 }
 
+// Semantic Scholar — optional. The API works without a key (shared 100 req/s
+// pool), but a key raises the personal limit and is preferred for the
+// background enrich job so we don't starve other clients.
+export async function getSemanticScholarApiKey(): Promise<string> {
+  return (
+    process.env.SEMANTIC_SCHOLAR_API_KEY ||
+    (await getIntegrationValue('integration.semantic_scholar.api_key'))
+  );
+}
+
 export async function getDeepseekApiKey(): Promise<string> {
   return (
     process.env.DEEPSEEK_API_KEY || (await getIntegrationValue('integration.deepseek.api_key'))

@@ -1,9 +1,10 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Users, Eye, Settings, ScrollText, Building2, Download } from 'lucide-react';
+import { Users, Eye, Settings, ScrollText, Building2, Download, Sparkles } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import NextLink from 'next/link';
+import { EnrichPublicationsButton } from '@/components/admin/enrich-publications-button';
 
 export const dynamic = 'force-dynamic';
 
@@ -67,6 +68,26 @@ export default async function AdminDashboardPage({ params }: Props) {
             <Download className="size-4" />
             {locale === 'ar' ? 'تصدير المنشورات (CSV)' : 'Export Publications (CSV)'}
           </NextLink>
+        </CardContent>
+      </Card>
+
+      {/* Semantic Scholar enrichment */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <Sparkles className="size-4" />
+            {locale === 'ar'
+              ? 'إثراء المنشورات (Semantic Scholar)'
+              : 'Enrich Publications (Semantic Scholar)'}
+          </CardTitle>
+          <CardDescription>
+            {locale === 'ar'
+              ? 'يضيف ملخّصات AI وعدد الاقتباسات المؤثّرة لكل منشور له DOI. يُشغَّل يدوياً بعد الاستيراد.'
+              : 'Adds AI-generated TLDRs and influential citation counts for every publication with a DOI. Run after imports.'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <EnrichPublicationsButton />
         </CardContent>
       </Card>
     </div>

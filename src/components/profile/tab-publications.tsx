@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Sparkles, Star } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -192,6 +192,15 @@ function PublicationRowItem({ pub, authors }: { pub: PublicationRow; authors: st
           {authors ? <p className="text-muted-foreground text-xs italic">{authors}</p> : null}
           {venue ? <p className="text-muted-foreground text-xs">{venue}</p> : null}
 
+          {pub.tldr ? (
+            <p className="bg-muted/40 text-foreground/80 flex gap-2 rounded-md px-3 py-2 text-xs leading-relaxed">
+              <Sparkles className="text-primary mt-0.5 size-3.5 shrink-0" aria-hidden />
+              <span>
+                <span className="text-primary font-semibold">{t('tldr')}:</span> {pub.tldr}
+              </span>
+            </p>
+          ) : null}
+
           <div className="flex flex-wrap items-center gap-1.5 pt-1">
             {pub.is_scopus ? <Badge variant="secondary">Scopus</Badge> : null}
             {pub.is_wos ? <Badge variant="secondary">WoS</Badge> : null}
@@ -204,6 +213,15 @@ function PublicationRowItem({ pub, authors }: { pub: PublicationRow; authors: st
             {pub.wos_citations !== null && pub.wos_citations > 0 ? (
               <Badge variant="outline" className="text-[10px]">
                 {t('wos_citations', { n: pub.wos_citations })}
+              </Badge>
+            ) : null}
+            {pub.influential_citations !== null && pub.influential_citations > 0 ? (
+              <Badge
+                variant="outline"
+                className="border-amber-400/60 bg-amber-50 text-[10px] text-amber-700 dark:bg-amber-500/10 dark:text-amber-400"
+              >
+                <Star className="size-3 fill-current" />
+                {t('influential_citations', { n: pub.influential_citations })}
               </Badge>
             ) : null}
             {pub.doi ? (

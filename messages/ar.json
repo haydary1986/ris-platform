@@ -414,6 +414,8 @@
       "scopus_citations": "اقتباسات Scopus: {n}",
       "wos_citations": "اقتباسات WoS: {n}",
       "scholar_citations": "اقتباسات Scholar: {n}",
+      "influential_citations": "{n} اقتباس مؤثّر",
+      "tldr": "ملخّص (AI)",
       "empty": "لا منشورات مسجَّلة بعد."
     },
     "projects": {
@@ -602,6 +604,14 @@
       "history_title": "الإشعارات الأخيرة",
       "history_empty": "لا يوجد إشعارات بعد.",
       "history_stats": "{recipients} مستلم · {success} تم · {failure} فشل · {locale}"
+    },
+    "enrich": {
+      "run": "إثراء الآن",
+      "progress": "تم فحص {examined} · أُثري {enriched}…",
+      "done": "اكتمل. فُحص {examined}، أُثري {enriched}.",
+      "partial": "تمّ بلوغ الحد. فُحص {examined}، أُثري {enriched}. اضغط مجدداً للمتابعة.",
+      "error_network": "خطأ في الشبكة. تحقّق من الاتصال ثم أعد المحاولة.",
+      "error_generic": "فشل الإثراء. راجع سجلات الخادم."
     },
     "chat_page": {
       "title": "سجلات المساعد الذكي",

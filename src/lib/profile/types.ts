@@ -58,6 +58,8 @@ export interface PublicationRow {
   scopus_citations: number | null;
   wos_citations: number | null;
   scholar_citations: number | null;
+  influential_citations: number | null;
+  tldr: string | null;
   keywords: string[] | null;
   sdg_goals: number[] | null;
 }
