@@ -22,6 +22,7 @@
     "analytics": "Analytics",
     "colleges": "Colleges",
     "departments": "Departments",
+    "network": "Collaboration network",
     "see_all": "See all",
     "about": "About",
     "sign_in": "Sign in",
@@ -389,6 +390,17 @@
       "contact_placeholder": "you@example.com",
       "start": "Start chat",
       "disclaimer": "We only use this to respond to your inquiry. We do not share it."
+    }
+  },
+  "network": {
+    "eyebrow": "Co-authorship network",
+    "title": "Research collaboration map",
+    "lead": "Every dot is an AL-Turath researcher; every line is a publication they co-authored. Hover a node to see the name, click to open the profile. Node colour represents the researcher's college.",
+    "empty": "Not enough linked co-author data yet. As more publications get imported with verified co-authors, the network will fill in.",
+    "stats": {
+      "researchers": "Researchers in the graph",
+      "collaborations": "Co-author links",
+      "hint": "Tip: dense clusters often map to a college or research group. Lone islands tend to be researchers whose collaborators are outside AL-Turath."
     }
   },
   "footer": {

@@ -39,6 +39,7 @@ export async function Footer() {
       | '/leaderboard'
       | '/analytics'
       | '/colleges'
+      | '/network'
       | '/collaborations';
     label: string;
   }> = [
@@ -47,6 +48,7 @@ export async function Footer() {
     { href: '/colleges', label: tNav('colleges') },
     { href: '/leaderboard', label: tNav('leaderboard') },
     { href: '/analytics', label: tNav('analytics') },
+    { href: '/network', label: tNav('network') },
   ];
 
   return (

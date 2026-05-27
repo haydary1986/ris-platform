@@ -173,6 +173,7 @@ export default async function sitemap(props: {
       ? [
           ...entry('/'),
           ...entry('/researchers'),
+          ...entry('/network'),
           ...entry('/analytics'),
           ...entry('/about'),
           ...entry('/contact'),
