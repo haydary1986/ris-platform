@@ -653,6 +653,13 @@
       "error_network": "Network error. Check your connection and try again.",
       "error_generic": "Enrichment failed. See server logs."
     },
+    "sdg_classify": {
+      "run": "Classify now",
+      "done": "Done. Tagged {updated} of {examined} publications.",
+      "last_run": "Last run: tagged {updated} of {examined}.",
+      "error_network": "Network error. Try again.",
+      "error_generic": "Classification failed. See server logs."
+    },
     "chat_page": {
       "title": "AI chat logs",
       "subtitle": "Every AI assistant conversation, so you can see what visitors ask and improve the product.",

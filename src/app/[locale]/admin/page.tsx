@@ -5,6 +5,8 @@ import { Users, Eye, Settings, ScrollText, Building2, Download, Sparkles } from 
 import { buttonVariants } from '@/components/ui/button';
 import NextLink from 'next/link';
 import { EnrichPublicationsButton } from '@/components/admin/enrich-publications-button';
+import { ClassifySdgButton } from '@/components/admin/classify-sdg-button';
+import { Tag } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -88,6 +90,24 @@ export default async function AdminDashboardPage({ params }: Props) {
         </CardHeader>
         <CardContent>
           <EnrichPublicationsButton />
+        </CardContent>
+      </Card>
+
+      {/* SDG auto-tagging */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <Tag className="size-4" />
+            {locale === 'ar' ? 'تصنيف المنشورات حسب SDG' : 'Tag Publications by SDG'}
+          </CardTitle>
+          <CardDescription>
+            {locale === 'ar'
+              ? 'يحلّل عناوين وملخّصات المنشورات ويُلصق وسوم أهداف التنمية المستدامة (1–17). يُشغَّل دورياً بعد كل استيراد.'
+              : 'Analyses publication titles + abstracts and tags them with UN Sustainable Development Goals (1–17). Run periodically after imports.'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ClassifySdgButton />
         </CardContent>
       </Card>
     </div>
