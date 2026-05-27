@@ -87,18 +87,38 @@ export default async function sitemap(props: {
   const offset = id * URLS_PER_SITEMAP;
   const researchers = await fetchResearcherChunk(offset);
 
+  // Each researcher contributes 6 URLs: the overview + 5 subtabs. The
+  // subpages each have their own SSR'd content and distinct titles, so
+  // Google should index them separately rather than treat them as
+  // duplicates of the overview.
+  const RESEARCHER_TABS = [
+    '', // overview lands on the bare /researcher/{slug}
+    '/publications',
+    '/projects',
+    '/experience',
+    '/thesis-supervision',
+    '/activities',
+  ] as const;
+
   const researcherEntries: MetadataRoute.Sitemap = routing.locales.flatMap((locale) =>
-    researchers.map((r) => ({
-      url: absoluteUrl(`/${locale}/researcher/${r.username}`),
-      lastModified: new Date(r.updated_at),
-      alternates: {
-        languages: Object.fromEntries(
-          routing.locales.map((l) => [l, absoluteUrl(`/${l}/researcher/${r.username}`)]),
-        ),
-      },
-      changeFrequency: 'weekly' as const,
-      priority: 0.6,
-    })),
+    researchers.flatMap((r) =>
+      RESEARCHER_TABS.map((tab) => {
+        const path = `/${locale}/researcher/${r.username}${tab}`;
+        return {
+          url: absoluteUrl(path),
+          lastModified: new Date(r.updated_at),
+          alternates: {
+            languages: Object.fromEntries(
+              routing.locales.map((l) => [l, absoluteUrl(`/${l}/researcher/${r.username}${tab}`)]),
+            ),
+          },
+          changeFrequency: 'weekly' as const,
+          // Overview is the strongest landing; subtabs slightly weaker so
+          // crawl budget concentrates on the main profile.
+          priority: tab === '' ? 0.6 : 0.5,
+        };
+      }),
+    ),
   );
 
   // Hub entries: colleges, departments, years, publications (first chunk only).
