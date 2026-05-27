@@ -45,6 +45,11 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,
   },
+  // Autodiscovery hint for feed readers — appears as <link rel="alternate"
+  // type="application/rss+xml" href="/feed.xml"/> in every page's head.
+  alternates: {
+    types: { 'application/rss+xml': '/feed.xml' },
+  },
 };
 
 export function generateStaticParams() {

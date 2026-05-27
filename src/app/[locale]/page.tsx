@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Hero } from '@/components/landing/hero';
 import { Features } from '@/components/landing/features';
+import { FeaturedPublications } from '@/components/landing/featured-publications';
 import { Stats } from '@/components/landing/stats';
 import { FeaturedResearchers } from '@/components/landing/featured-researchers';
 import { Mission } from '@/components/landing/mission';
@@ -102,6 +103,7 @@ export default async function HomePage({ params }: HomePageProps) {
       <InstitutionStats locale={locale} />
       <Stats locale={typedLocale} />
       <FeaturedResearchers locale={typedLocale} />
+      <FeaturedPublications />
       <Mission />
       <SdgGrid locale={typedLocale} />
       <DataSources locale={locale} />

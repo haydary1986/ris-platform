@@ -72,6 +72,11 @@
       "h_index": "h-index {value}",
       "empty": "No featured researchers yet."
     },
+    "featured_publications": {
+      "eyebrow": "Recent research",
+      "title": "Featured publications",
+      "subtitle": "Recent high-impact papers from AL-Turath faculty — auto-curated by recency and citation count. Subscribe to the RSS feed for updates."
+    },
     "mission": {
       "title": "Our mission",
       "items": {
