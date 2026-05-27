@@ -135,5 +135,8 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
-  matcher: ['/((?!api|auth|_next|_vercel|monitoring|.*\\..*).*)'],
+  // `oai` is the OAI-PMH 2.0 protocol endpoint — it must NOT be wrapped
+  // by the locale prefixer; harvesters call /oai with fixed args and
+  // expect XML, not a 307 to /en/oai.
+  matcher: ['/((?!api|auth|oai|_next|_vercel|monitoring|.*\\..*).*)'],
 };
