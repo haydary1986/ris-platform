@@ -684,6 +684,14 @@
       "error_network": "Network error. Try again.",
       "error_generic": "Linking failed. See server logs."
     },
+    "crosslink_orcid": {
+      "run": "Cross-link now",
+      "in_progress": "Calling ORCID API for each researcher — this may take 2–3 minutes…",
+      "done": "Done. {linked} co-authors linked across {matched} DOI-matched publications.",
+      "last_run": "Last run: {linked} linked across {matched} matched publications.",
+      "error_network": "Network error. Try again.",
+      "error_generic": "Cross-linking failed. See server logs."
+    },
     "chat_page": {
       "title": "AI chat logs",
       "subtitle": "Every AI assistant conversation, so you can see what visitors ask and improve the product.",

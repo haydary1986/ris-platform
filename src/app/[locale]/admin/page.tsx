@@ -7,7 +7,8 @@ import NextLink from 'next/link';
 import { EnrichPublicationsButton } from '@/components/admin/enrich-publications-button';
 import { ClassifySdgButton } from '@/components/admin/classify-sdg-button';
 import { LinkCoauthorsButton } from '@/components/admin/link-coauthors-button';
-import { Network, Tag } from 'lucide-react';
+import { CrosslinkOrcidButton } from '@/components/admin/crosslink-orcid-button';
+import { Network, Share2, Tag } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -127,6 +128,26 @@ export default async function AdminDashboardPage({ params }: Props) {
         </CardHeader>
         <CardContent>
           <LinkCoauthorsButton />
+        </CardContent>
+      </Card>
+
+      {/* ORCID cross-reference (deterministic, strongest signal) */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <Share2 className="size-4" />
+            {locale === 'ar'
+              ? 'ربط المؤلّفين عبر ORCID (موصى به)'
+              : 'Cross-link via ORCID (recommended)'}
+          </CardTitle>
+          <CardDescription>
+            {locale === 'ar'
+              ? 'يستدعي ORCID API لكل تدريسي ويربط المؤلّفين المشاركين بمعرّفات ORCID الموحَّدة — أدقّ من مطابقة الأسماء. يستغرق ٢-٣ دقائق.'
+              : 'Calls ORCID API per researcher and links co-authors by globally-unique ORCID iDs — more accurate than name matching. Takes 2–3 minutes.'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <CrosslinkOrcidButton />
         </CardContent>
       </Card>
     </div>
