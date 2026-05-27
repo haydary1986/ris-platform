@@ -6,6 +6,7 @@ import { fetchProfileByUsername } from '@/lib/profile/fetch';
 import { createClient } from '@/lib/supabase/server';
 import { routing, type Locale } from '@/i18n/routing';
 import { ProfileHero } from '@/components/profile/profile-hero';
+import { MetricsBar } from '@/components/profile/metrics-bar';
 import { ProfileTabs } from '@/components/profile/profile-tabs';
 import { TabOverview } from '@/components/profile/tab-overview';
 import { TabPublications } from '@/components/profile/tab-publications';
@@ -137,6 +138,7 @@ export default async function ResearcherPage({ params }: ResearcherPageProps) {
         isOwner={isOwner}
         profileUrl={profileUrl}
       />
+      <MetricsBar payload={payload} />
       <section className="container mx-auto px-4 py-8">
         <Breadcrumbs
           items={[{ href: '/researchers', label: 'researchers' }, { label: profileName }]}

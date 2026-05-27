@@ -17,8 +17,13 @@ export function PersonSchema({
   const title = profile.academic_title_id ? lookups.titleById.get(profile.academic_title_id) : null;
   const college = profile.college_id ? lookups.collegeById.get(profile.college_id) : null;
 
+  // Split on every plausible delimiter authors use: commas (EN + AR), semi-
+  // colons, newlines, bullets, and pipes. Without `\n` here we used to ship
+  // one giant string with embedded newlines back to Google as if it were a
+  // single research interest — exactly the regression flagged in the
+  // V5 audit (knowsAbout must be an array of distinct topics).
   const knowsAbout = (locale === 'ar' ? profile.field_of_interest_ar : profile.field_of_interest_en)
-    ?.split(/[,،;]/)
+    ?.split(/[,،;؛\n\r•|]+/)
     .map((s) => s.trim())
     .filter(Boolean);
 

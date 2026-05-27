@@ -385,6 +385,17 @@
     "share": "Share profile",
     "qr_title": "QR code for this profile",
     "download_cv": "Download CV",
+    "metrics": {
+      "section_label": "Bibliometric indicators",
+      "publications": "Publications",
+      "publications_tooltip": "Total number of publications attributed to this researcher.",
+      "citations": "Citations",
+      "citations_tooltip": "Total citations received across all publications.",
+      "h_index": "h-index",
+      "h_index_tooltip": "Largest N such that N publications have at least N citations each.",
+      "i10_index": "i10-index",
+      "i10_index_tooltip": "Number of publications with at least 10 citations."
+    },
     "tabs": {
       "overview": "Overview",
       "publications": "Publications",
