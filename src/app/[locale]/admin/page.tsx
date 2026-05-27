@@ -6,7 +6,8 @@ import { buttonVariants } from '@/components/ui/button';
 import NextLink from 'next/link';
 import { EnrichPublicationsButton } from '@/components/admin/enrich-publications-button';
 import { ClassifySdgButton } from '@/components/admin/classify-sdg-button';
-import { Tag } from 'lucide-react';
+import { LinkCoauthorsButton } from '@/components/admin/link-coauthors-button';
+import { Network, Tag } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -108,6 +109,24 @@ export default async function AdminDashboardPage({ params }: Props) {
         </CardHeader>
         <CardContent>
           <ClassifySdgButton />
+        </CardContent>
+      </Card>
+
+      {/* Co-authors linking */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <Network className="size-4" />
+            {locale === 'ar' ? 'ربط المؤلّفين المشاركين' : 'Link Co-authors'}
+          </CardTitle>
+          <CardDescription>
+            {locale === 'ar'
+              ? 'يطابق أسماء المؤلّفين المشاركين بسجلات الباحثين الموجودين في النظام. يُفعِّل شبكة التعاون البحثي على /network.'
+              : 'Matches co-author text names against existing researcher records. Powers the collaboration network at /network.'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <LinkCoauthorsButton />
         </CardContent>
       </Card>
     </div>

@@ -677,6 +677,13 @@
       "error_network": "Network error. Try again.",
       "error_generic": "Classification failed. See server logs."
     },
+    "link_coauthors": {
+      "run": "Link now",
+      "done": "Done. Linked {linked} of {examined} co-author rows.",
+      "last_run": "Last run: linked {linked} of {examined}.",
+      "error_network": "Network error. Try again.",
+      "error_generic": "Linking failed. See server logs."
+    },
     "chat_page": {
       "title": "AI chat logs",
       "subtitle": "Every AI assistant conversation, so you can see what visitors ask and improve the product.",
