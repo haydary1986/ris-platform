@@ -8,7 +8,8 @@ import { EnrichPublicationsButton } from '@/components/admin/enrich-publications
 import { ClassifySdgButton } from '@/components/admin/classify-sdg-button';
 import { LinkCoauthorsButton } from '@/components/admin/link-coauthors-button';
 import { CrosslinkOrcidButton } from '@/components/admin/crosslink-orcid-button';
-import { Network, Share2, Tag } from 'lucide-react';
+import { CrosslinkCrossrefButton } from '@/components/admin/crosslink-crossref-button';
+import { Link2, Network, Share2, Tag } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -136,18 +137,36 @@ export default async function AdminDashboardPage({ params }: Props) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-sm">
             <Share2 className="size-4" />
-            {locale === 'ar'
-              ? 'ربط المؤلّفين عبر ORCID (موصى به)'
-              : 'Cross-link via ORCID (recommended)'}
+            {locale === 'ar' ? 'ربط المؤلّفين عبر ORCID' : 'Cross-link via ORCID'}
           </CardTitle>
           <CardDescription>
             {locale === 'ar'
-              ? 'يستدعي ORCID API لكل تدريسي ويربط المؤلّفين المشاركين بمعرّفات ORCID الموحَّدة — أدقّ من مطابقة الأسماء. يستغرق ٢-٣ دقائق.'
-              : 'Calls ORCID API per researcher and links co-authors by globally-unique ORCID iDs — more accurate than name matching. Takes 2–3 minutes.'}
+              ? 'يستدعي ORCID API لكل تدريسي. ضعيف في الغالب لأن الباحثين نادراً ما يُضيفون ORCID للمؤلّفين المشاركين في ملفّاتهم.'
+              : 'Calls ORCID API per researcher. Often weak — researchers rarely add contributor ORCID iDs to their own ORCID work records.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <CrosslinkOrcidButton />
+        </CardContent>
+      </Card>
+
+      {/* Crossref cross-reference — STRONGEST SIGNAL */}
+      <Card className="border-primary/40">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <Link2 className="size-4 text-primary" />
+            {locale === 'ar'
+              ? 'ربط المؤلّفين عبر Crossref (الأقوى — موصى به)'
+              : 'Cross-link via Crossref (strongest — recommended)'}
+          </CardTitle>
+          <CardDescription>
+            {locale === 'ar'
+              ? 'يستدعي Crossref API لكل DOI ويربط المؤلّفين بمعرّفات ORCID المُسجَّلة لدى الناشر — أكثر اكتمالاً من ORCID نفسه. يستغرق ٣-٥ دقائق.'
+              : 'Calls Crossref API per DOI and links by publisher-registered ORCID iDs — typically more complete than ORCID itself. Takes 3–5 minutes.'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <CrosslinkCrossrefButton />
         </CardContent>
       </Card>
     </div>

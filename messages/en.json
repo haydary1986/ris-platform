@@ -692,6 +692,14 @@
       "error_network": "Network error. Try again.",
       "error_generic": "Cross-linking failed. See server logs."
     },
+    "crosslink_crossref": {
+      "run": "Run Crossref linker",
+      "in_progress": "Calling Crossref API per DOI — typically 3–5 minutes for ~300 publications…",
+      "done": "Done. {linked} co-authors linked across {examined} publications.",
+      "last_run": "Last run: {linked} linked across {examined} examined.",
+      "error_network": "Network error. Try again.",
+      "error_generic": "Cross-linking failed. See server logs."
+    },
     "chat_page": {
       "title": "AI chat logs",
       "subtitle": "Every AI assistant conversation, so you can see what visitors ask and improve the product.",
