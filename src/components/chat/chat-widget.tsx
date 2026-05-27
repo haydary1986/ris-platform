@@ -1,7 +1,16 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { MessageCircle, Rocket, Send, Sparkles, X, Loader2 } from 'lucide-react';
+import {
+  MessageCircle,
+  Rocket,
+  Send,
+  Sparkles,
+  X,
+  Loader2,
+  ThumbsUp,
+  ThumbsDown,
+} from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -54,6 +63,10 @@ export function ChatWidget() {
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
+  // Per-message rating: messageId → 1 (👍) or -1 (👎). Persists only for
+  // the lifetime of the widget instance; an admin sees the full history
+  // via the chat dashboard.
+  const [feedback, setFeedback] = useState<Record<string, 1 | -1>>({});
   // Lead capture: required from anon visitors before their first message.
   // Persisted in localStorage so returning visitors aren't asked twice.
   const [visitorName, setVisitorName] = useState('');
@@ -257,6 +270,19 @@ export function ChatWidget() {
     }
   }
 
+  async function rateMessage(messageId: string, rating: 1 | -1) {
+    setFeedback((f) => ({ ...f, [messageId]: rating }));
+    try {
+      await fetch('/api/chat/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ conversationId, messageId, rating }),
+      });
+    } catch {
+      /* swallow — failed feedback is a UI inconvenience, not worth a toast */
+    }
+  }
+
   // Avoid a flash during initial probe.
   if (available === null || authed === null) return null;
 
@@ -417,7 +443,7 @@ export function ChatWidget() {
                 {messages.map((m) => (
                   <div
                     key={m.id}
-                    className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}
                   >
                     <div
                       className={`max-w-[85%] rounded-2xl px-3 py-2 ${
@@ -435,6 +461,28 @@ export function ChatWidget() {
                         <Loader2 className="size-4 animate-spin opacity-60" />
                       )}
                     </div>
+                    {m.role === 'assistant' && m.content && !streaming ? (
+                      <div className="mt-1 flex items-center gap-1 text-muted-foreground">
+                        <button
+                          type="button"
+                          onClick={() => rateMessage(m.id, 1)}
+                          aria-label={t('feedback.helpful')}
+                          aria-pressed={feedback[m.id] === 1}
+                          className={`rounded p-1 hover:text-foreground ${feedback[m.id] === 1 ? 'text-emerald-600' : ''}`}
+                        >
+                          <ThumbsUp className="size-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => rateMessage(m.id, -1)}
+                          aria-label={t('feedback.not_helpful')}
+                          aria-pressed={feedback[m.id] === -1}
+                          className={`rounded p-1 hover:text-foreground ${feedback[m.id] === -1 ? 'text-rose-600' : ''}`}
+                        >
+                          <ThumbsDown className="size-3.5" />
+                        </button>
+                      </div>
+                    ) : null}
                   </div>
                 ))}
               </div>
@@ -463,7 +511,17 @@ export function ChatWidget() {
                   )}
                 </Button>
               </div>
-              <p className="text-muted-foreground px-3 pb-2 text-[10px]">{t('disclaimer')}</p>
+              <p className="text-muted-foreground px-3 pb-2 text-[10px]">
+                {t('disclaimer')}{' '}
+                <a
+                  href={`/${locale}/chat/about`}
+                  className="hover:text-foreground underline"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {t('about.eyebrow')}
+                </a>
+              </p>
             </>
           )}
         </div>

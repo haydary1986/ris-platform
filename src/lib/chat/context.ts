@@ -175,7 +175,16 @@ ${listing}
 - أجب باللغة العربية.
 - اقتبس الأسماء حرفياً.
 - عند الترشيح، اذكر **سبب الترشيح** (مثلاً: "لديه 3 أبحاث عن التعلم العميق في ...").
-- كن موجزاً: جملة أو جملتان ثم قائمة نقطية.`;
+- كن موجزاً: جملة أو جملتان ثم قائمة نقطية.
+
+قسم المصادر (إلزامي):
+كل إجابة تذكر باحثاً أو منشوراً يجب أن تنتهي بسطر فارغ ثم:
+
+**المصادر:**
+- [اسم الباحث](الرابط الكامل من قائمة الباحثين)
+- [اسم منشور آخر إن وُجد](رابطه)
+
+استخدم تنسيق Markdown الموضّح أعلاه حرفياً ليُحوَّل إلى روابط قابلة للنقر في الواجهة.`;
 
   const enInstructions = `You are the official AL-Turath University assistant on the RIS platform.
 
@@ -208,7 +217,17 @@ Formatting:
 - Reply in English.
 - Quote researcher names exactly as listed.
 - When recommending, **state the evidence** (e.g., "has 3 papers on deep learning for medical imaging").
-- Be concise: 1–2 sentences + a bulleted list.`;
+- Be concise: 1–2 sentences + a bulleted list.
+
+Sources section (REQUIRED):
+Every answer that names a researcher or a publication must end with a blank
+line followed by:
+
+**Sources:**
+- [Researcher name](full URL from the listing)
+- [Another publication if relevant](its URL)
+
+Use this exact Markdown so the widget renders clickable links.`;
 
   return locale === 'ar' ? arInstructions : enInstructions;
 }

@@ -325,6 +325,35 @@
       "pubs": "Who has the most publications?",
       "sdg": "Who works on sustainable development?"
     },
+    "feedback": {
+      "helpful": "Helpful answer",
+      "not_helpful": "Not helpful"
+    },
+    "about": {
+      "eyebrow": "About this assistant",
+      "title": "AI Research Assistant — what to expect",
+      "lead": "The floating assistant on RIS helps you find AL-Turath University researchers by field, topic, or interest. Here is how it works and where it stops.",
+      "what": {
+        "title": "What it does",
+        "body": "Answers questions about the AL-Turath researcher directory: who works in a field, who has published on a topic, which college a researcher belongs to. Each answer links directly to the relevant profile or publication page."
+      },
+      "how": {
+        "title": "How it works",
+        "body": "The assistant is grounded in RIS data only. Every researcher's name, bio, interests, and recent publication titles are loaded as context for the language model (DeepSeek). It does not browse the web at request time."
+      },
+      "limits": {
+        "title": "Limits",
+        "body": "Not a replacement for direct contact with a researcher. The model can occasionally miss or misattribute information — always confirm critical details (publications, dates, citations) on the researcher's profile page."
+      },
+      "privacy": {
+        "title": "Privacy",
+        "body": "Conversations are logged for service quality and abuse prevention. Anonymous visitors are asked for name + contact before the first message; logged-in researchers chat under their account. Do not share confidential information."
+      },
+      "report": {
+        "title": "Reporting a bad answer",
+        "body": "Use the 👎 button below any assistant message to flag it. Reports help us improve the knowledge base. For urgent inaccuracies email research@uoturath.edu.iq."
+      }
+    },
     "errors": {
       "rate_limited": "Message limit reached. Please try again later.",
       "not_configured": "AI assistant is not configured yet.",
